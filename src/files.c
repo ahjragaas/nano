@@ -1298,13 +1298,8 @@ void insert_a_file_or(bool execute)
 #endif
 			} else
 #endif /* !NANO_TINY */
-			{
-				/* Make sure the specified path is tilde-expanded. */
-				answer = free_and_assign(answer, real_dir_from_tilde(answer));
-
-				/* Read the file into a new buffer or into current buffer. */
+				/* Read the file into either current buffer or new buffer. */
 				open_buffer(answer, ISSET(MULTIBUFFER));
-			}
 
 #ifdef ENABLE_MULTIBUFFER
 			if (ISSET(MULTIBUFFER)) {
