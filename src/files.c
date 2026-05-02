@@ -409,7 +409,7 @@ bool open_buffer(const char *filename, bool new_one)
 	realname = real_dir_from_tilde(filename);
 
 	/* Don't try to open directories, character files, or block files. */
-	if (*filename != '\0' && stat(realname, &fileinfo) == 0) {
+	if (*filename && stat(realname, &fileinfo) == 0) {
 		if (S_ISDIR(fileinfo.st_mode)) {
 			statusline(ALERT, _("\"%s\" is a directory"), realname);
 			free(realname);
@@ -440,7 +440,7 @@ bool open_buffer(const char *filename, bool new_one)
 
 		if (has_valid_path(realname)) {
 #ifndef NANO_TINY
-			if (ISSET(LOCKING) && !ISSET(VIEW_MODE) && filename[0] != '\0') {
+			if (ISSET(LOCKING) && !ISSET(VIEW_MODE) && *filename) {
 				char *thelocksname = do_lockfile(realname, TRUE);
 
 				/* When not overriding an existing lock, discard the buffer. */
@@ -458,7 +458,7 @@ bool open_buffer(const char *filename, bool new_one)
 	}
 
 	/* If we have a filename and are not in NOREAD mode, open the file. */
-	if (filename[0] != '\0' && !ISSET(NOREAD_MODE))
+	if (*filename && !ISSET(NOREAD_MODE))
 		descriptor = open_file(realname, new_one, &f);
 
 	/* If we've successfully opened an existing file, read it in. */
@@ -1370,7 +1370,7 @@ char *get_full_path(const char *origpath)
 
 	/* If realpath() returned NULL, try without the last component,
 	 * as this can be a file that does not exist yet. */
-	if (!target && slash && slash[1]) {
+	if (target == NULL && slash && slash[1]) {
 		*slash = '\0';
 		target = realpath(untilded, NULL);
 
@@ -2125,10 +2125,9 @@ int write_it_out(bool exiting, bool withprompt)
 
 		present_path = mallocstrcpy(present_path, "./");
 
-		/* When we shouldn't prompt, use the existing filename.
-		 * Otherwise, ask for (confirmation of) the filename. */
-		if ((!withprompt || (ISSET(SAVE_ON_EXIT) && exiting)) &&
-								openfile->filename[0] != '\0')
+		/* When we shouldn't prompt and have a filename, use that name.
+		 * Otherwise, ask for the filename (or for confirmation of it). */
+		if ((!withprompt || (ISSET(SAVE_ON_EXIT) && exiting)) && *openfile->filename)
 			answer = mallocstrcpy(answer, openfile->filename);
 		else
 			response = do_prompt(MWRITEFILE, given, NULL,
