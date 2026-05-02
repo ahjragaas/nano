@@ -564,7 +564,7 @@ char *browse(char *path)
 				goto testresize;
 			}
 
-			path = free_and_assign(path, real_dir_from_tilde(answer));
+			path = free_and_assign(path, expand_leading_tilde(answer));
 
 			/* If the given path is relative, join it with the current path. */
 			if (*path != '/') {
@@ -676,7 +676,7 @@ char *browse(char *path)
  * start browsing in that directory, otherwise in the current directory. */
 char *browse_in(const char *inpath)
 {
-	char *path = real_dir_from_tilde(inpath);
+	char *path = expand_leading_tilde(inpath);
 	struct stat fileinfo;
 
 	/* If path is not a directory, try to strip a filename from it; if then

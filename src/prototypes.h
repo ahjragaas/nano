@@ -319,7 +319,7 @@ bool write_region_to_file(const char *name, FILE *stream, bool normal,
 int write_it_out(bool exiting, bool withprompt);
 void do_writeout(void);
 void do_savefile(void);
-char *real_dir_from_tilde(const char *path);
+char *expand_leading_tilde(const char *path);
 #if defined(ENABLE_TABCOMP) || defined(ENABLE_BROWSER)
 int diralphasort(const void *va, const void *vb);
 #endif

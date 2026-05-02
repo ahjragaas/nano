@@ -406,7 +406,7 @@ bool open_buffer(const char *filename, bool new_one)
 	}
 #endif
 
-	realname = real_dir_from_tilde(filename);
+	realname = expand_leading_tilde(filename);
 
 	/* Don't try to open directories, character files, or block files. */
 	if (*filename && stat(realname, &fileinfo) == 0) {
@@ -1364,7 +1364,7 @@ char *get_full_path(const char *origpath)
 	if (origpath == NULL)
 		return NULL;
 
-	untilded = real_dir_from_tilde(origpath);
+	untilded = expand_leading_tilde(origpath);
 	target = realpath(untilded, NULL);
 	slash = strrchr(untilded, '/');
 
@@ -1729,7 +1729,7 @@ bool write_file(const char *name, FILE *thefile, bool normal,
 	struct stat fileinfo;
 		/* The status fields filled in by statting the file. */
 #endif
-	char *realname = real_dir_from_tilde(name);
+	char *realname = expand_leading_tilde(name);
 		/* The filename after tilde expansion. */
 	int descriptor = 0;
 		/* The descriptor that gets assigned when opening the file. */
@@ -2332,7 +2332,7 @@ void do_savefile(void)
 
 /* Convert the tilde notation when the given path begins with ~/ or ~user/.
  * Return an allocated string containing the expanded path. */
-char *real_dir_from_tilde(const char *path)
+char *expand_leading_tilde(const char *path)
 {
 	char *tilded, *retval;
 	size_t i = 1;
@@ -2403,7 +2403,7 @@ int diralphasort(const void *va, const void *vb)
 /* Return TRUE when the given path is a directory. */
 bool is_dir(const char *path)
 {
-	char *thepath = real_dir_from_tilde(path);
+	char *thepath = expand_leading_tilde(path);
 	struct stat fileinfo;
 	bool retval;
 
@@ -2476,7 +2476,7 @@ char **filename_completion(const char *morsel, size_t *num_matches)
 		filename = copy_of(++slash);
 		/* Cut off the filename part after the slash. */
 		*slash = '\0';
-		dirname = real_dir_from_tilde(dirname);
+		dirname = expand_leading_tilde(dirname);
 		/* A non-absolute path is relative to the current browser directory. */
 		if (dirname[0] != '/') {
 			dirname = nrealloc(dirname, strlen(present_path) + strlen(wasdirname) + 1);
