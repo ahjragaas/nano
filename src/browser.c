@@ -573,7 +573,7 @@ char *browse(char *path)
 			}
 
 #ifdef ENABLE_OPERATINGDIR
-			if (outside_of_confinement(path, FALSE)) {
+			if (operating_dir && outside_of_confinement(path, FALSE)) {
 				/* TRANSLATORS: This refers to the confining effect of
 				 * the option --operatingdir, not of --restricted. */
 				statusline(ALERT, _("Can't go outside of %s"), operating_dir);
@@ -606,7 +606,7 @@ char *browse(char *path)
 			/* Note: The selected file can be outside the operating
 			 * directory if it's ".." or if it's a symlink to a
 			 * directory outside the operating directory. */
-			if (outside_of_confinement(filelist[selected], FALSE)) {
+			if (operating_dir && outside_of_confinement(filelist[selected], FALSE)) {
 				statusline(ALERT, _("Can't go outside of %s"), operating_dir);
 				continue;
 			}
@@ -698,7 +698,7 @@ char *browse_in(const char *inpath)
 #ifdef ENABLE_OPERATINGDIR
 	/* If the resulting path isn't in the operating directory,
 	 * use the operating directory instead. */
-	if (outside_of_confinement(path, FALSE))
+	if (operating_dir && outside_of_confinement(path, FALSE))
 		path = mallocstrcpy(path, operating_dir);
 #endif
 

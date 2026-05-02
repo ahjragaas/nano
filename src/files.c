@@ -400,7 +400,7 @@ bool open_buffer(const char *filename, bool new_one)
 	as_an_at = FALSE;
 
 #ifdef ENABLE_OPERATINGDIR
-	if (outside_of_confinement(filename, FALSE)) {
+	if (operating_dir && outside_of_confinement(filename, FALSE)) {
 		statusline(ALERT, _("Can't read file from outside of %s"), operating_dir);
 		return FALSE;
 	}
@@ -1475,14 +1475,8 @@ void init_operating_dir(void)
  * are considered to be inside, so that tab completion will work. */
 bool outside_of_confinement(const char *somepath, bool tabbing)
 {
+	char *fullpath = get_full_path(somepath);
 	bool is_inside, begins_to_be;
-	char *fullpath;
-
-	/* If no operating directory is set, there is nothing to check. */
-	if (operating_dir == NULL)
-		return FALSE;
-
-	fullpath = get_full_path(somepath);
 
 	/* When we can't get an absolute path, it means some directory in the path
 	 * doesn't exist or is unreadable.  When not doing tab completion, somepath
@@ -1743,7 +1737,7 @@ bool write_file(const char *name, FILE *thefile, bool normal,
 #ifdef ENABLE_OPERATINGDIR
 	/* If we're writing a temporary file, we're probably going outside
 	 * the operating directory, so skip the operating directory test. */
-	if (normal && outside_of_confinement(realname, FALSE)) {
+	if (normal && operating_dir && outside_of_confinement(realname, FALSE)) {
 		statusline(ALERT, _("Can't write outside of %s"), operating_dir);
 		goto cleanup_and_exit;
 	}
@@ -2427,7 +2421,7 @@ char **username_completion(const char *morsel, size_t length, size_t *num_matche
 		if (strncmp(userdata->pw_name, morsel + 1, length - 1) == 0) {
 #ifdef ENABLE_OPERATINGDIR
 			/* Skip directories that are outside of the allowed area. */
-			if (outside_of_confinement(userdata->pw_dir, TRUE))
+			if (operating_dir && outside_of_confinement(userdata->pw_dir, TRUE))
 				continue;
 #endif
 			matches = nrealloc(matches, (*num_matches + 1) * sizeof(char *));
@@ -2509,7 +2503,7 @@ char **filename_completion(const char *morsel, size_t *num_matches)
 			sprintf(fullname, "%s%s", dirname, entry->d_name);
 
 #ifdef ENABLE_OPERATINGDIR
-			if (outside_of_confinement(fullname, TRUE))
+			if (operating_dir && outside_of_confinement(fullname, TRUE))
 				continue;
 #endif
 			if (currmenu == MGOTODIR && !is_dir(fullname))
