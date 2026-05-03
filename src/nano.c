@@ -1554,7 +1554,7 @@ void inject(char *burst, size_t count)
 
 #ifndef NANO_TINY
 	/* When panning, and we have come near the edge of the viewport... */
-	if (united_sidescroll && openfile->placewewant > openfile->brink + editwincols - CUSHION - 1 )
+	if (united_sidescroll && openfile->placewewant > openfile->brink + editwincols - CUSHION - 1)
 		refresh_needed = TRUE;
 
 	/* When softwrapping and the number of chunks in the current line changed,
