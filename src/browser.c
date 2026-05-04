@@ -178,8 +178,8 @@ void browser_refresh(void)
 		/* Show information about the file: "--" for symlinks (except when
 		 * they point to a directory) and for files that have disappeared,
 		 * "(dir)" for directories, and the file size for normal files. */
-		if (lstat(filelist[index], &state) == -1 || S_ISLNK(state.st_mode)) {
-			if (stat(filelist[index], &state) == -1 || !S_ISDIR(state.st_mode))
+		if (lstat(filelist[index], &state) < 0 || S_ISLNK(state.st_mode)) {
+			if (stat(filelist[index], &state) < 0 || !S_ISDIR(state.st_mode))
 				info = copy_of("--");
 			else
 				/* TRANSLATORS: Anything more than 7 cells gets clipped. */
@@ -612,7 +612,7 @@ char *browse(char *path)
 			}
 #endif
 			/* If for some reason the file is inaccessible, complain. */
-			if (stat(filelist[selected], &st) == -1) {
+			if (stat(filelist[selected], &st) < 0) {
 				statusline(ALERT, _("Error reading %s: %s"),
 								filelist[selected], strerror(errno));
 				continue;
@@ -681,10 +681,10 @@ char *browse_in(const char *inpath)
 
 	/* If path is not a directory, try to strip a filename from it; if then
 	 * still not a directory, use the current working directory instead. */
-	if (stat(path, &fileinfo) == -1 || !S_ISDIR(fileinfo.st_mode)) {
+	if (stat(path, &fileinfo) < 0 || !S_ISDIR(fileinfo.st_mode)) {
 		path = free_and_assign(path, strip_last_component(path));
 
-		if (stat(path, &fileinfo) == -1 || !S_ISDIR(fileinfo.st_mode)) {
+		if (stat(path, &fileinfo) < 0 || !S_ISDIR(fileinfo.st_mode)) {
 			path = free_and_assign(path, realpath(".", NULL));
 
 			if (path == NULL) {

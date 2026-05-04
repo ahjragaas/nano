@@ -224,7 +224,7 @@ bool have_statedir(void)
 	else
 		statedir = concatenate(homedir, "/.local/share/nano/");
 
-	if (stat(statedir, &dirinfo) == -1) {
+	if (stat(statedir, &dirinfo) < 0) {
 		if (xdgdatadir == NULL) {
 			char *statepath = concatenate(homedir, "/.local");
 			mkdir(statepath, S_IRWXU);
@@ -233,7 +233,7 @@ bool have_statedir(void)
 			mkdir(statepath, S_IRWXU);
 			free(statepath);
 		}
-		if (mkdir(statedir, S_IRWXU) == -1) {
+		if (mkdir(statedir, S_IRWXU) < 0) {
 			jot_error(N_("Unable to create directory %s: %s\n"
 								"It is required for saving/loading "
 								"search history or cursor positions.\n"),

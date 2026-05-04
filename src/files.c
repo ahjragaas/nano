@@ -362,7 +362,7 @@ bool has_valid_path(const char *filename)
 
 	if (gone)
 		statusline(ALERT, _("The working directory has disappeared"));
-	else if (stat(parentdir, &parentinfo) == -1) {
+	else if (stat(parentdir, &parentinfo) < 0) {
 		if (errno == ENOENT)
 			/* TRANSLATORS: Keep the next ten messages at most 76 characters. */
 			statusline(ALERT, _("Directory '%s' does not exist"), parentdir);
@@ -370,7 +370,7 @@ bool has_valid_path(const char *filename)
 			statusline(ALERT, _("Path '%s': %s"), parentdir, strerror(errno));
 	} else if (!S_ISDIR(parentinfo.st_mode))
 		statusline(ALERT, _("Path '%s' is not a directory"), parentdir);
-	else if (access(parentdir, X_OK) == -1)
+	else if (access(parentdir, X_OK) < 0)
 		statusline(ALERT, _("Path '%s' is not accessible"), parentdir);
 #ifndef NANO_TINY
 	else if (ISSET(LOCKING) && !ISSET(VIEW_MODE) && access(parentdir, W_OK) < 0)
@@ -844,10 +844,10 @@ int open_file(const char *filename, bool new_one, FILE **f)
 
 	/* If the absolute path is unusable (due to some component's permissions),
 	 * try the given path instead (as it is probably relative). */
-	if (full_filename == NULL || stat(full_filename, &fileinfo) == -1)
+	if (full_filename == NULL || stat(full_filename, &fileinfo) < 0)
 		full_filename = mallocstrcpy(full_filename, filename);
 
-	if (stat(full_filename, &fileinfo) == -1) {
+	if (stat(full_filename, &fileinfo) < 0) {
 		free(full_filename);
 
 		if (new_one) {
@@ -875,7 +875,7 @@ int open_file(const char *filename, bool new_one, FILE **f)
 	block_sigwinch(FALSE);
 #endif
 
-	if (fd == -1) {
+	if (fd < 0) {
 		if (errno == EINTR || errno == 0)
 			statusline(ALERT, _("Interrupted"));
 		else
@@ -915,7 +915,7 @@ char *get_next_filename(const char *name, const char *suffix)
 	while (TRUE) {
 		struct stat fs;
 
-		if (stat(buf, &fs) == -1)
+		if (stat(buf, &fs) < 0)
 			return buf;
 
 		/* Limit the number of backup files to a hundred thousand. */
@@ -995,7 +995,7 @@ void execute_command(const char *command)
 
 	/* Create a pipe to read the command's output from, and, if needed,
 	 * a pipe to feed the command's input through. */
-	if (pipe(from_fd) == -1 || (should_pipe && pipe(to_fd) == -1)) {
+	if (pipe(from_fd) < 0 || (should_pipe && pipe(to_fd) < 0)) {
 		statusline(ALERT, _("Could not create pipe: %s"), strerror(errno));
 		return;
 	}
@@ -1036,7 +1036,7 @@ void execute_command(const char *command)
 	/* Parent: close the unused write end of the pipe. */
 	close(from_fd[1]);
 
-	if (pid_of_command == -1) {
+	if (pid_of_command < 0) {
 		statusline(ALERT, _("Could not fork: %s"), strerror(errno));
 		close(from_fd[0]);
 		return;
@@ -1080,7 +1080,7 @@ void execute_command(const char *command)
 			exit(0);
 		}
 
-		if (pid_of_sender == -1)
+		if (pid_of_sender < 0)
 			statusline(ALERT, _("Could not fork: %s"), strerror(errno));
 
 		close(to_fd[0]);
@@ -1462,7 +1462,7 @@ void init_operating_dir(void)
 	char *target = get_full_path(operating_dir);
 
 	/* If the operating directory is inaccessible, fail. */
-	if (target == NULL || chdir(target) == -1)
+	if (target == NULL || chdir(target) < 0)
 		die(_("Invalid operating directory: %s\n"), operating_dir);
 
 	free(operating_dir);

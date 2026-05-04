@@ -2360,7 +2360,7 @@ void do_int_speller(const char *tempfile_name)
 	unsigned stash[sizeof(flags) / sizeof(flags[0])];
 
 	/* Create all three pipes up front. */
-	if (pipe(spell_fd) == -1 || pipe(sort_fd) == -1 || pipe(uniq_fd) == -1) {
+	if (pipe(spell_fd) < 0 || pipe(sort_fd) < 0 || pipe(uniq_fd) < 0) {
 		statusline(ALERT, _("Could not create pipe: %s"), strerror(errno));
 		return;
 	}
@@ -2370,7 +2370,7 @@ void do_int_speller(const char *tempfile_name)
 	/* Fork a process to run spell in. */
 	if ((pid_spell = fork()) == 0) {
 		/* Child: open the temporary file that holds the text to be checked. */
-		if ((tempfile_fd = open(tempfile_name, O_RDONLY)) == -1)
+		if ((tempfile_fd = open(tempfile_name, O_RDONLY)) < 0)
 			exit(6);
 
 		/* Connect standard input to the temporary file. */
@@ -2625,7 +2625,7 @@ void do_linter(void)
 	}
 
 	/* Create a pipe up front. */
-	if (pipe(lint_fd) == -1) {
+	if (pipe(lint_fd) < 0) {
 		statusline(ALERT, _("Could not create pipe: %s"), strerror(errno));
 		return;
 	}
