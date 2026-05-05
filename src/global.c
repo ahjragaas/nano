@@ -862,9 +862,9 @@ void shortcut_init(void)
 #endif
 
 	add_to_funcs(case_sens_void, MWHEREIS|MREPLACE,
-			N_("Case Sens"), WHENHELP(case_gist), TOGETHER);
+			N_("Case sensitive"), WHENHELP(case_gist), TOGETHER);
 	add_to_funcs(regexp_void, MWHEREIS|MREPLACE,
-			N_("Reg.exp."), WHENHELP(regexp_gist), TOGETHER);
+			N_("Reg.expression"), WHENHELP(regexp_gist), TOGETHER);
 	add_to_funcs(backwards_void, MWHEREIS|MREPLACE,
 			N_("Backwards"), WHENHELP(reverse_gist), BLANKAFTER);
 
@@ -977,7 +977,7 @@ void shortcut_init(void)
 #ifdef ENABLE_JUSTIFY
 	add_to_funcs(to_para_begin, MMAIN|MGOTOLINE,
 			/* TRANSLATORS: Try to keep these two strings at most 17 characters. */
-			N_("Begin of Paragr."), WHENHELP(parabegin_gist), TOGETHER);
+			N_("Start of Paragraph"), WHENHELP(parabegin_gist), TOGETHER);
 	add_to_funcs(to_para_end, MMAIN|MGOTOLINE,
 			N_("End of Paragraph"), WHENHELP(paraend_gist), BLANKAFTER);
 #endif
