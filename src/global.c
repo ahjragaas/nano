@@ -850,7 +850,7 @@ void shortcut_init(void)
 
 #ifndef NANO_TINY
 	add_to_funcs(do_undo, MMAIN,
-			/* TRANSLATORS: Try to keep the next ten strings at most 12 characters. */
+			/* TRANSLATORS: Try to keep the next four strings at most 12 characters. */
 			N_("Undo"), WHENHELP(undo_gist), TOGETHER);
 	add_to_funcs(do_redo, MMAIN,
 			N_("Redo"), WHENHELP(redo_gist), BLANKAFTER);
@@ -862,6 +862,7 @@ void shortcut_init(void)
 #endif
 
 	add_to_funcs(case_sens_void, MWHEREIS|MREPLACE,
+			/* TRANSLATORS: Try to keep the next four strings at most 16 characters. */
 			N_("Case sensitive"), WHENHELP(case_gist), TOGETHER);
 	add_to_funcs(regexp_void, MWHEREIS|MREPLACE,
 			N_("Reg.expression"), WHENHELP(regexp_gist), TOGETHER);
@@ -875,6 +876,7 @@ void shortcut_init(void)
 
 #ifdef ENABLE_HISTORIES
 	add_to_funcs(get_older_item, MWHEREIS|MREPLACE|MREPLACEWITH|MWHEREISFILE,
+			/* TRANSLATORS: Try to keep the next two strings at most 10 characters. */
 			N_("Older"), WHENHELP(older_gist), TOGETHER);
 	add_to_funcs(get_newer_item, MWHEREIS|MREPLACE|MREPLACEWITH|MWHEREISFILE,
 			N_("Newer"), WHENHELP(newer_gist), BLANKAFTER);
@@ -976,7 +978,7 @@ void shortcut_init(void)
 			N_("Next Block"), WHENHELP(nextblock_gist), TOGETHER);
 #ifdef ENABLE_JUSTIFY
 	add_to_funcs(to_para_begin, MMAIN|MGOTOLINE,
-			/* TRANSLATORS: Try to keep these two strings at most 17 characters. */
+			/* TRANSLATORS: Try to keep these two strings at most 23 characters. */
 			N_("Start of Paragraph"), WHENHELP(parabegin_gist), TOGETHER);
 	add_to_funcs(to_para_end, MMAIN|MGOTOLINE,
 			N_("End of Paragraph"), WHENHELP(paraend_gist), BLANKAFTER);
