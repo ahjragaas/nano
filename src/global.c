@@ -942,7 +942,7 @@ void shortcut_init(void)
 
 #ifndef NANO_TINY
 	add_to_funcs(to_prev_word, MMAIN,
-			/* TRANSLATORS: Try to keep the next four strings at most 12 characters. */
+			/* TRANSLATORS: Try to keep the next four strings at most 13 characters. */
 			N_("Prev Word"), WHENHELP(prevword_gist), TOGETHER);
 	add_to_funcs(to_next_word, MMAIN,
 			N_("Next Word"), WHENHELP(nextword_gist), TOGETHER);
@@ -954,7 +954,7 @@ void shortcut_init(void)
 			N_("End"), WHENHELP(end_gist), TOGETHER);
 #ifndef NANO_TINY
 	add_to_funcs(do_scroll_left, MMAIN,
-			/* TRANSLATORS: Try to keep the next two strings at most 12 characters. */
+			/* TRANSLATORS: Try to keep the next two strings at most 13 characters. */
 			N_("Scroll Left"), WHENHELP(scrollleft_gist), TOGETHER);
 	add_to_funcs(do_scroll_right, MMAIN,
 			N_("Scroll Right"), WHENHELP(scrollright_gist), BLANKAFTER);
@@ -967,7 +967,7 @@ void shortcut_init(void)
 			N_("Next Line"), WHENHELP(nextline_gist), TOGETHER);
 #if !defined(NANO_TINY) || defined(ENABLE_HELP)
 	add_to_funcs(do_scroll_up, MMAIN,
-			/* TRANSLATORS: Try to keep the next four strings at most 12 characters. */
+			/* TRANSLATORS: Try to keep the next four strings at most 13 characters. */
 			N_("Scroll Up"), WHENHELP(scrollup_gist), TOGETHER);
 	add_to_funcs(do_scroll_down, MMAIN,
 			N_("Scroll Down"), WHENHELP(scrolldown_gist), BLANKAFTER);
@@ -979,7 +979,7 @@ void shortcut_init(void)
 			N_("Next Block"), WHENHELP(nextblock_gist), TOGETHER);
 #ifdef ENABLE_JUSTIFY
 	add_to_funcs(to_para_begin, MMAIN|MGOTOLINE,
-			/* TRANSLATORS: Try to keep these two strings at most 16 characters. */
+			/* TRANSLATORS: Try to keep these two strings at most 17 characters. */
 			N_("Begin of Paragr."), WHENHELP(parabegin_gist), TOGETHER);
 	add_to_funcs(to_para_end, MMAIN|MGOTOLINE,
 			N_("End of Paragraph"), WHENHELP(paraend_gist), BLANKAFTER);
@@ -1005,7 +1005,7 @@ void shortcut_init(void)
 
 #ifdef ENABLE_MULTIBUFFER
 	add_to_funcs(switch_to_prev_buffer, MMAIN,
-			/* TRANSLATORS: Try to keep these two strings at most 15 characters. */
+			/* TRANSLATORS: Try to keep these two strings at most 14 characters. */
 			N_("Prev File"), WHENHELP(prevfile_gist), TOGETHER);
 	add_to_funcs(switch_to_next_buffer, MMAIN,
 			N_("Next File"), WHENHELP(nextfile_gist), BLANKAFTER);
@@ -1135,7 +1135,7 @@ void shortcut_init(void)
 #endif
 #ifdef ENABLE_SPELLER
 	add_to_funcs(do_spell, MEXECUTE,
-			/* TRANSLATORS: Try to keep the next four strings at most 12 characters. */
+			/* TRANSLATORS: Try to keep the next four strings at most 10 characters. */
 			N_("Spell Check"), WHENHELP(spell_gist), TOGETHER);
 #endif
 #ifdef ENABLE_LINTER
