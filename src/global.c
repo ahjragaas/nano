@@ -313,7 +313,6 @@ void get_older_item(void)  {;}
 void get_newer_item(void)  {;}
 #endif
 void flip_replace(void)  {;}
-void flip_goto(void)  {;}
 #ifdef ENABLE_BROWSER
 void to_files(void)  {;}
 void goto_dir(void)  {;}
@@ -780,8 +779,6 @@ void shortcut_init(void)
 #ifndef NANO_TINY
 	add_to_funcs(full_refresh, MINSERTFILE|MEXECUTE, "Refresh", "x", 0);
 #endif
-	add_to_funcs(flip_goto, MWHEREIS, "Go To Line", "x", 0);
-	add_to_funcs(flip_goto, MGOTOLINE, "Go To Text", "x", 0);
 #endif
 
 	add_to_funcs(do_writeout, MMAIN,
@@ -1151,13 +1148,6 @@ void shortcut_init(void)
 			N_("Formatter"), WHENHELP(formatter_gist), BLANKAFTER);
 #endif
 
-#ifdef ENABLE_HELP
-	add_to_funcs(flip_goto, MWHEREIS,
-			N_("Go To Line"), WHENHELP(gotoline_gist), BLANKAFTER);
-	add_to_funcs(flip_goto, MGOTOLINE,
-			N_("Go To Text"), WHENHELP(whereis_gist), BLANKAFTER);
-#endif
-
 #ifndef NANO_TINY
 	add_to_funcs(dos_format, MWRITEFILE,
 			N_("DOS Format"), WHENHELP(dos_gist), TOGETHER);
@@ -1506,8 +1496,6 @@ void shortcut_init(void)
 	add_to_sclist(MWHEREIS|MREPLACE, "M-R", 0, regexp_void, 0);
 	add_to_sclist(MWHEREIS|MREPLACE, "M-B", 0, backwards_void, 0);
 	add_to_sclist(MWHEREIS|MREPLACE, "^R", 0, flip_replace, 0);
-	add_to_sclist(MWHEREIS|MGOTOLINE, "^T", 0, flip_goto, 0);
-	add_to_sclist(MWHEREIS|MGOTOLINE, SLASH_OR_DASH, 0, flip_goto, 0);
 #ifdef ENABLE_HISTORIES
 	add_to_sclist(MWHEREIS|MREPLACE|MREPLACEWITH|MWHEREISFILE|MFINDINHELP|MEXECUTE, "^P", 0, get_older_item, 0);
 	add_to_sclist(MWHEREIS|MREPLACE|MREPLACEWITH|MWHEREISFILE|MFINDINHELP|MEXECUTE, "^N", 0, get_newer_item, 0);

@@ -409,8 +409,6 @@ keystruct *strtosc(const char *input)
 		s->func = backwards_void;
 	else if (!strcmp(input, "flipreplace"))
 		s->func = flip_replace;
-	else if (!strcmp(input, "flipgoto"))
-		s->func = flip_goto;
 #ifdef ENABLE_HISTORIES
 	else if (!strcmp(input, "older"))
 		s->func = get_older_item;
