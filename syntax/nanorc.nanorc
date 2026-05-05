@@ -31,7 +31,7 @@ color crimson "\{(cut|copy|paste|zap|chopword(left|right)|cutrestoffile|execute|
 color crimson "\{(location|gotoline|(begin|end)para|comment|complete|(un)?indent|wordcount|(record|run)macro|anchor|undo|redo)\}"
 color crimson "\{(left|right|up|down|home|end|scroll(left|right|up|down)|page(up|down)|(top|bottom)row|center|cycle|(prev|next)(word|block|anchor|buf))\}"
 color crimson "\{(tab|enter|delete|backspace|verbatim|refresh|suspend|casesens|regexp|backwards|older|newer|(dos|mac)format)\}"
-color crimson "\{(append|prepend|backup|flip(goto|replace|execute|pipe|convert|newbuffer)|browser|gotodir|(first|last)(file|line))\}"
+color crimson "\{(append|prepend|backup|flip(replace|execute|pipe|convert|newbuffer)|browser|gotodir|(first|last)(file|line))\}"
 color crimson "\{(nohelp|constantshow|softwrap|linenumbers|whitespacedisplay|nosyntax|zero)\}"
 color crimson "\{(smarthome|autoindent|cutfromcursor|breaklonglines|tabstospaces|mouse|\{|\})\}"
 

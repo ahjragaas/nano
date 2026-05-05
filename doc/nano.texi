@@ -1855,9 +1855,6 @@ Retrieves the next (later) entry at a prompt.
 @item flipreplace
 Toggles between searching for something and replacing something.
 
-@item flipgoto
-Toggles between searching for text and targeting a line number.
-
 @item flipexecute
 Switches from inserting a file to executing a command.
 
