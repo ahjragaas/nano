@@ -172,7 +172,7 @@ char *get_history_completion(linestruct **here, char *string, size_t len)
 	 * for a match of len characters.  Skip over an exact match. */
 	item = find_in_history((*here)->prev, htop, string, len);
 
-	while (item != NULL && strcmp(item->data, string) == 0)
+	while (item && strcmp(item->data, string) == 0)
 		item = find_in_history(item->prev, htop, string, len);
 
 	if (item) {
@@ -183,7 +183,7 @@ char *get_history_completion(linestruct **here, char *string, size_t len)
 	/* Now search from the bottom of the list to the original position. */
 	item = find_in_history(hbot, *here, string, len);
 
-	while (item != NULL && strcmp(item->data, string) == 0)
+	while (item && strcmp(item->data, string) == 0)
 		item = find_in_history(item->prev, *here, string, len);
 
 	if (item) {
@@ -204,7 +204,7 @@ bool have_statedir(void)
 
 	get_homedir();
 
-	if (homedir != NULL) {
+	if (homedir) {
 		statedir = concatenate(homedir, "/.nano/");
 
 		if (stat(statedir, &dirinfo) == 0 && S_ISDIR(dirinfo.st_mode)) {
@@ -219,7 +219,7 @@ bool have_statedir(void)
 	if (homedir == NULL && xdgdatadir == NULL)
 		return FALSE;
 
-	if (xdgdatadir != NULL)
+	if (xdgdatadir)
 		statedir = concatenate(xdgdatadir, "/nano/");
 	else
 		statedir = concatenate(homedir, "/.local/share/nano/");
@@ -584,7 +584,7 @@ void restore_cursor_position_if_any(void)
 	reload_positions_if_needed();
 
 	item = positions_register;
-	while (item != NULL && strcmp(item->filename, fullpath) != 0)
+	while (item && strcmp(item->filename, fullpath) != 0)
 		item = item->next;
 
 	free(fullpath);

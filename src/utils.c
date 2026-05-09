@@ -40,13 +40,13 @@ void get_homedir(void)
 		if (homenv == NULL || geteuid() == ROOT_UID) {
 			const struct passwd *userage = getpwuid(geteuid());
 
-			if (userage != NULL)
+			if (userage)
 				homenv = userage->pw_dir;
 		}
 #endif
 
 		/* Only set `homedir` if a home directory could be determined. */
-		if (homenv != NULL && *homenv != '\0')
+		if (homenv && *homenv)
 			homedir = copy_of(homenv);
 	}
 }

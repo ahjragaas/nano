@@ -338,7 +338,7 @@ void extract_segment(linestruct *top, size_t top_x, linestruct *bot, size_t bot_
 		cutbottom->next = taken->next;
 		delete_node(taken);
 
-		if (cutbottom->next != NULL) {
+		if (cutbottom->next) {
 			cutbottom->next->prev = cutbottom;
 			cutbottom = last;
 		}
@@ -384,7 +384,7 @@ void ingraft_buffer(linestruct *topline)
 #endif
 	linestruct *botline = topline;
 
-	while (botline->next != NULL)
+	while (botline->next)
 		botline = botline->next;
 
 	/* Add the size of the text to be grafted to the buffer size. */

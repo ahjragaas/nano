@@ -118,7 +118,7 @@ bool is_word_char(const char *c, bool allow_punct)
 	if (allow_punct && is_punct_char(c))
 		return TRUE;
 
-	if (word_chars != NULL && *word_chars != '\0') {
+	if (word_chars && *word_chars) {
 		char symbol[MAXCHARLEN + 1];
 		int symlen = collect_char(c, symbol);
 
@@ -587,7 +587,7 @@ const char *mbstrchr(const char *string, const char *chr)
 char *mbstrpbrk(const char *string, const char *accept)
 {
 	while (*string != '\0') {
-		if (mbstrchr(accept, string) != NULL)
+		if (mbstrchr(accept, string))
 			return (char *)string;
 
 		string += char_length(string);
@@ -607,7 +607,7 @@ char *mbrevstrpbrk(const char *head, const char *accept, const char *pointer)
 	}
 
 	while (TRUE) {
-		if (mbstrchr(accept, pointer) != NULL)
+		if (mbstrchr(accept, pointer))
 			return (char *)pointer;
 
 		/* If we've reached the head of the string, we found nothing. */

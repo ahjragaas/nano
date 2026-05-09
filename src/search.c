@@ -210,7 +210,7 @@ int findnextstr(const char *needle, bool whole_word_only, int modus,
 		} else
 			found = strstrwrapper(line->data, needle, from);
 
-		if (found != NULL) {
+		if (found) {
 			/* When doing a regex search, compute the length of the match. */
 			if (ISSET(USE_REGEXP))
 				found_len = regmatches[0].rm_eo - regmatches[0].rm_so;
@@ -324,7 +324,7 @@ int findnextstr(const char *needle, bool whole_word_only, int modus,
 	openfile->current_x = found_x;
 
 	/* When requested, pass back the length of the match. */
-	if (match_len != NULL)
+	if (match_len)
 		*match_len = found_len;
 
 #ifndef NANO_TINY
@@ -367,7 +367,7 @@ void do_research(void)
 #ifdef ENABLE_HISTORIES
 	/* If nothing was searched for yet during this run of nano, but
 	 * there is a search history, take the most recent item. */
-	if (*last_search == '\0' && searchbot->prev != NULL)
+	if (*last_search == '\0' && searchbot->prev)
 		last_search = mallocstrcpy(last_search, searchbot->prev->data);
 #endif
 

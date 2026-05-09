@@ -473,7 +473,7 @@ size_t shown_entries_for(int menu)
 	size_t maximum = ((COLS + 40) / 20) * 2;
 	size_t count = 0;
 
-	while (count < maximum && item != NULL) {
+	while (count < maximum && item) {
 		if (item->menus & menu)
 			count++;
 		item = item->next;

@@ -504,7 +504,7 @@ void set_modified(void)
 	titlebar(NULL);
 
 #ifndef NANO_TINY
-	if (openfile->lock_filename != NULL)
+	if (openfile->lock_filename)
 		write_lockfile(openfile->lock_filename, openfile->filename, TRUE);
 #endif
 }
@@ -959,7 +959,7 @@ void send_data(const linestruct *line, int fd)
 		exit(4);
 
 	/* Send each line, except a final empty line. */
-	while (line != NULL && (line->next != NULL || line->data[0] != '\0')) {
+	while (line && (line->next || line->data[0] != '\0')) {
 		size_t length = recode_LF_to_NUL(line->data);
 
 		if (fwrite(line->data, 1, length, tube) < length)
@@ -1208,7 +1208,7 @@ void insert_a_file_or(bool execute)
 							execute ? &execute_history : NULL,
 							edit_refresh, msg,
 #ifdef ENABLE_OPERATINGDIR
-							operating_dir != NULL ? operating_dir :
+							operating_dir ? operating_dir :
 #endif
 							"./");
 
@@ -1423,7 +1423,7 @@ char *safe_tempfile(FILE **stream)
 
 	/* Get the absolute path for the first directory among $TMPDIR
 	 * and P_tmpdir that is writable, otherwise use /tmp/. */
-	if (env_dir != NULL)
+	if (env_dir)
 		tempdir = check_writable_directory(env_dir);
 
 	if (tempdir == NULL)
@@ -1637,7 +1637,7 @@ bool make_backup_of(char *realname)
 	original = fopen(realname, "rb");
 
 	/* If opening succeeded, copy the existing file to the backup. */
-	if (original != NULL)
+	if (original)
 		verdict = copy_file(original, backup_file, FALSE);
 
 	if (original == NULL || verdict < 0) {
@@ -1834,7 +1834,7 @@ bool write_file(const char *name, FILE *thefile, bool normal,
 			else
 				statusline(ALERT, _("Error writing %s: %s"), realname, strerror(errno));
 #ifndef NANO_TINY
-			if (tempname != NULL)
+			if (tempname)
 				unlink(tempname);
 #endif
 			goto cleanup_and_exit;
@@ -1967,7 +1967,7 @@ bool write_file(const char *name, FILE *thefile, bool normal,
 		 * and check whether it means a different syntax gets used. */
 		if (strcmp(openfile->filename, realname) != 0) {
 #ifndef NANO_TINY
-			if (openfile->lock_filename != NULL) {
+			if (openfile->lock_filename) {
 				delete_lockfile(openfile->lock_filename);
 				free(openfile->lock_filename);
 			}
@@ -2352,7 +2352,7 @@ char *expand_leading_tilde(const char *path)
 		} while (userdata && strcmp(userdata->pw_name, tilded + 1) != 0);
 		endpwent();
 
-		if (userdata != NULL)
+		if (userdata)
 			tilded = mallocstrcpy(tilded, userdata->pw_dir);
 #else
 		tilded = copy_of("");
@@ -2464,7 +2464,7 @@ char **filename_completion(const char *morsel, size_t *num_matches)
 
 	/* If there's a / in the name, split out filename and directory parts. */
 	slash = strrchr(dirname, '/');
-	if (slash != NULL) {
+	if (slash) {
 		char *wasdirname = dirname;
 
 		filename = copy_of(++slash);

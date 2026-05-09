@@ -215,15 +215,15 @@ void help_init(void)
 	}
 
 	htx[0] = _(htx[0]);
-	if (htx[1] != NULL)
+	if (htx[1])
 		htx[1] = _(htx[1]);
-	if (htx[2] != NULL)
+	if (htx[2])
 		htx[2] = _(htx[2]);
 
 	allocsize += strlen(htx[0]);
-	if (htx[1] != NULL)
+	if (htx[1])
 		allocsize += strlen(htx[1]);
-	if (htx[2] != NULL)
+	if (htx[2])
 		allocsize += strlen(htx[2]);
 
 	/* Calculate the length of the descriptions of the shortcuts.
@@ -251,9 +251,9 @@ void help_init(void)
 
 	/* Now add the text we want. */
 	strcpy(help_text, htx[0]);
-	if (htx[1] != NULL)
+	if (htx[1])
 		strcat(help_text, htx[1]);
-	if (htx[2] != NULL)
+	if (htx[2])
 		strcat(help_text, htx[2]);
 
 	/* Remember this end-of-introduction, start-of-shortcuts. */
@@ -274,10 +274,10 @@ void help_init(void)
 				if (++tally == 1) {
 					sprintf(ptr, "%s                ", s->keystr);
 					/* Unicode arrows take three bytes instead of one. */
-					ptr += (strstr(s->keystr, "\xE2") != NULL ? 9 : 7);
+					ptr += (strstr(s->keystr, "\xE2") ? 9 : 7);
 				} else {
 					sprintf(ptr, "(%s)       ", s->keystr);
-					ptr += (strstr(s->keystr, "\xE2") != NULL ? 12 : 10);
+					ptr += (strstr(s->keystr, "\xE2") ? 12 : 10);
 					break;
 				}
 			}
@@ -407,7 +407,7 @@ void show_help(void)
 #ifdef ENABLE_COLOR
 	char *was_syntax = syntaxstr;
 #endif
-	char *saved_answer = (answer != NULL) ? copy_of(answer) : NULL;
+	char *saved_answer = (answer) ? copy_of(answer) : NULL;
 		/* The current answer when the user invokes help at the prompt. */
 	unsigned stash[sizeof(flags) / sizeof(flags[0])];
 		/* A storage place for the current flag settings. */

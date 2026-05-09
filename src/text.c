@@ -282,7 +282,7 @@ void handle_indent_action(undostruct *u, bool undoing, bool add_indent)
 		goto_line_posx(u->head_lineno, u->head_x);
 
 	/* For each line in the group, add or remove the individual indent. */
-	while (line != NULL && line->lineno <= group->bottom_line) {
+	while (line && line->lineno <= group->bottom_line) {
 		char *blanks = group->indentations[line->lineno - group->top_line];
 
 		if (undoing ^ add_indent)
@@ -436,7 +436,7 @@ void handle_comment_action(undostruct *u, bool undoing, bool add_comment)
 	while (group) {
 		linestruct *line = line_from_number(group->top_line);
 
-		while (line != NULL && line->lineno <= group->bottom_line) {
+		while (line && line->lineno <= group->bottom_line) {
 			comment_line(undoing ^ add_comment ?
 								COMMENT : UNCOMMENT, line, u->strdata);
 			line = line->next;
@@ -863,7 +863,7 @@ void do_enter(void)
 #ifdef ENABLE_JUSTIFY
 		/* When doing automatic long-line wrapping and the next line is
 		 * in this same paragraph, use its indentation as the model. */
-		if (ISSET(BREAK_LONG_LINES) && sampleline->next != NULL &&
+		if (ISSET(BREAK_LONG_LINES) && sampleline->next &&
 					inpar(sampleline->next) && !begpar(sampleline->next, 0))
 			sampleline = sampleline->next;
 #endif
@@ -934,12 +934,12 @@ void discard_until(const undostruct *thisitem)
 	undostruct *dropit = openfile->undotop;
 	groupstruct *group;
 
-	while (dropit != NULL && dropit != thisitem) {
+	while (dropit && dropit != thisitem) {
 		openfile->undotop = dropit->next;
 		free(dropit->strdata);
 		free_lines(dropit->cutbuffer);
 		group = dropit->grouping;
-		while (group != NULL) {
+		while (group) {
 			groupstruct *next = group->next;
 			free_chararray(group->indentations,
 								group->bottom_line - group->top_line + 1);
@@ -1023,7 +1023,7 @@ void add_undo(undo_type action, const char *message)
 			break;
 		}
 		action = JOIN;
-		if (thisline->next != NULL) {
+		if (thisline->next) {
 			if (u->type == BACK) {
 				u->head_lineno = thisline->next->lineno;
 				u->head_x = 0;
@@ -1189,7 +1189,7 @@ void update_undo(undo_type action)
 	case CUT:
 		if (u->type == ZAP)
 			u->cutbuffer = cutbuffer;
-		else if (cutbuffer != NULL) {
+		else if (cutbuffer) {
 			free_lines(u->cutbuffer);
 			u->cutbuffer = copy_buffer(cutbuffer);
 		} else
@@ -1199,7 +1199,7 @@ void update_undo(undo_type action)
 			size_t count = 0;
 
 			/* Find the end of the cut for the undo/redo, using our copy. */
-			while (bottomline->next != NULL) {
+			while (bottomline->next) {
 				bottomline = bottomline->next;
 				count++;
 			}
@@ -1544,7 +1544,7 @@ bool find_paragraph(linestruct **firstline, size_t *const linecount)
 	linestruct *line = *firstline;
 
 	/* When not currently in a paragraph, move forward to a line that is. */
-	while (!inpar(line) && line->next != NULL)
+	while (!inpar(line) && line->next)
 		line = line->next;
 
 	*firstline = line;
@@ -1626,10 +1626,10 @@ void squeeze(linestruct *line, size_t skip)
 
 			while (*from != '\0' && is_blank_char(from))
 				from += char_length(from);
-		} else if (mbstrchr(punct, from) != NULL) {
+		} else if (mbstrchr(punct, from)) {
 			copy_character(&from, &to);
 
-			if (*from != '\0' && mbstrchr(brackets, from) != NULL)
+			if (*from != '\0' && mbstrchr(brackets, from))
 				copy_character(&from, &to);
 
 			if (*from != '\0' && is_blank_char(from)) {
@@ -1701,7 +1701,7 @@ void rewrap_paragraph(linestruct **line, char *lead_string, size_t lead_len)
 #endif
 
 	/* When possible, go to the line after the rewrapped paragraph. */
-	if ((*line)->next != NULL)
+	if ((*line)->next)
 		*line = (*line)->next;
 }
 
@@ -1895,7 +1895,7 @@ void justify_text(bool whole_buffer)
 		}
 
 		/* When possible, step one line further; otherwise, to line's end. */
-		if (endline->next != NULL) {
+		if (endline->next) {
 			endline = endline->next;
 			end_x = 0;
 		} else
@@ -2046,7 +2046,7 @@ void construct_argument_list(char ***arguments, char *command, char *filename)
 	char *element = strtok(copy_of_command, " ");
 	int count = 2;
 
-	while (element != NULL) {
+	while (element) {
 		*arguments = nrealloc(*arguments, ++count * sizeof(char *));
 		(*arguments)[count - 3] = element;
 		element = strtok(NULL, " ");
@@ -2734,7 +2734,7 @@ void do_linter(void)
 							curlint = nmalloc(sizeof(lintstruct));
 							curlint->next = NULL;
 							curlint->prev = tmplint;
-							if (curlint->prev != NULL)
+							if (curlint->prev)
 								curlint->prev->next = curlint;
 							curlint->filename = copy_of(filename);
 							curlint->lineno = linenumber;
@@ -2826,13 +2826,13 @@ void do_linter(void)
 					char *dontwantfile = copy_of(curlint->filename);
 					lintstruct *restlint = NULL;
 
-					while (curlint != NULL) {
+					while (curlint) {
 						if (strcmp(curlint->filename, dontwantfile) == 0) {
 							if (curlint == lints)
 								lints = curlint->next;
 							else
 								curlint->prev->next = curlint->next;
-							if (curlint->next != NULL)
+							if (curlint->next)
 								curlint->next->prev = curlint->prev;
 							tmplint = curlint;
 							curlint = curlint->next;
@@ -2896,7 +2896,7 @@ void do_linter(void)
 			tmplint = NULL;
 			do_help();
 		} else if (function == do_page_up || function == to_prev_block) {
-			if (curlint->prev != NULL)
+			if (curlint->prev)
 				curlint = curlint->prev;
 			else if (last_wait != time(NULL)) {
 				statusbar(_("At first message"));
@@ -2906,7 +2906,7 @@ void do_linter(void)
 				statusline(NOTICE, "%s", curlint->msg);
 			}
 		} else if (function == do_page_down || function == to_next_block) {
-			if (curlint->next != NULL)
+			if (curlint->next)
 				curlint = curlint->next;
 			else if (last_wait != time(NULL)) {
 				statusbar(_("At last message"));
@@ -2964,7 +2964,7 @@ void do_formatter(void)
 
 	temp_name = safe_tempfile(&stream);
 
-	if (temp_name != NULL)
+	if (temp_name)
 		okay = write_file(temp_name, stream, TEMPORARY, OVERWRITE, NONOTES);
 
 	if (!okay)
@@ -3123,7 +3123,7 @@ void complete_a_word(void)
 	/* If this is a fresh completion attempt... */
 	if (pletion_line == NULL) {
 		/* Clear the list of words of a previous completion run. */
-		while (list_of_completions != NULL) {
+		while (list_of_completions) {
 			completionstruct *dropit = list_of_completions;
 			list_of_completions = list_of_completions->next;
 			free(dropit->word);
@@ -3173,7 +3173,7 @@ void complete_a_word(void)
 	shard[shard_length] = '\0';
 
 	/* Run through all of the lines in the buffer, looking for shard. */
-	while (pletion_line != NULL) {
+	while (pletion_line) {
 		ssize_t threshold = strlen(pletion_line->data) - shard_length;
 				/* The point where we can stop searching for shard. */
 		completionstruct *some_word;
@@ -3217,7 +3217,7 @@ void complete_a_word(void)
 				some_word = some_word->next;
 
 			/* If we've already tried this word, skip it. */
-			if (some_word != NULL) {
+			if (some_word) {
 				free(completion);
 				continue;
 			}
@@ -3262,7 +3262,7 @@ void complete_a_word(void)
 	}
 
 	/* The search has gone through all buffers. */
-	if (list_of_completions != NULL) {
+	if (list_of_completions) {
 		edit_refresh();
 		statusline(AHEM, _("No further matches"));
 	} else

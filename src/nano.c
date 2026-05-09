@@ -87,7 +87,7 @@ void splice_node(linestruct *afterthis, linestruct *newnode)
 {
 	newnode->next = afterthis->next;
 	newnode->prev = afterthis;
-	if (afterthis->next != NULL)
+	if (afterthis->next)
 		afterthis->next->prev = newnode;
 	afterthis->next = newnode;
 
@@ -117,9 +117,9 @@ void delete_node(linestruct *line)
 /* Disconnect a node from a linked list of linestructs and delete it. */
 void unlink_node(linestruct *line)
 {
-	if (line->prev != NULL)
+	if (line->prev)
 		line->prev->next = line->next;
-	if (line->next != NULL)
+	if (line->next)
 		line->next->prev = line->prev;
 
 	/* Update filebot when removing a node at the end of file. */
@@ -135,7 +135,7 @@ void free_lines(linestruct *src)
 	if (src == NULL)
 		return;
 
-	while (src->next != NULL) {
+	while (src->next) {
 		src = src->next;
 		delete_node(src->prev);
 	}
@@ -171,7 +171,7 @@ linestruct *copy_buffer(const linestruct *src)
 	item = head;
 	src = src->next;
 
-	while (src != NULL) {
+	while (src) {
 		item->next = copy_node(src);
 		item->next->prev = item;
 
@@ -189,7 +189,7 @@ void renumber_from(linestruct *line)
 {
 	ssize_t number = (line->prev == NULL) ? 0 : line->prev->lineno;
 
-	while (line != NULL) {
+	while (line) {
 		line->lineno = ++number;
 		line = line->next;
 	}
@@ -247,7 +247,7 @@ void finish(void)
 
 #ifndef NANO_TINY
 	/* Deallocate the two or three subwindows. */
-	if (topwin != NULL)
+	if (topwin)
 		delwin(topwin);
 	delwin(midwin);
 	delwin(footwin);
@@ -393,8 +393,8 @@ void die(const char *msg, ...)
 void window_init(void)
 {
 	/* When resizing, first delete the existing windows. */
-	if (midwin != NULL) {
-		if (topwin != NULL)
+	if (midwin) {
+		if (topwin)
 			delwin(topwin);
 		delwin(midwin);
 		delwin(footwin);
@@ -2238,11 +2238,11 @@ int main(int argc, char **argv)
 			fill = fill_cmdline;
 #endif
 #ifndef NANO_TINY
-		if (backup_dir_cmdline != NULL) {
+		if (backup_dir_cmdline) {
 			free(backup_dir);
 			backup_dir = backup_dir_cmdline;
 		}
-		if (word_chars_cmdline != NULL) {
+		if (word_chars_cmdline) {
 			free(word_chars);
 			word_chars = word_chars_cmdline;
 		}
@@ -2252,19 +2252,19 @@ int main(int argc, char **argv)
 			tabsize = tabsize_cmdline;
 #endif
 #ifdef ENABLE_OPERATINGDIR
-		if (operating_dir_cmdline != NULL || ISSET(RESTRICTED)) {
+		if (operating_dir_cmdline || ISSET(RESTRICTED)) {
 			free(operating_dir);
 			operating_dir = operating_dir_cmdline;
 		}
 #endif
 #ifdef ENABLE_JUSTIFY
-		if (quotestr_cmdline != NULL) {
+		if (quotestr_cmdline) {
 			free(quotestr);
 			quotestr = quotestr_cmdline;
 		}
 #endif
 #ifdef ENABLE_SPELLER
-		if (alt_speller_cmdline != NULL) {
+		if (alt_speller_cmdline) {
 			free(alt_speller);
 			alt_speller = alt_speller_cmdline;
 		}
@@ -2335,13 +2335,13 @@ int main(int argc, char **argv)
 #ifndef NANO_TINY
 	/* If a backup directory was specified and we're not in restricted mode,
 	 * verify it is an existing folder, so backup files can be saved there. */
-	if (backup_dir != NULL && !ISSET(RESTRICTED))
+	if (backup_dir && !ISSET(RESTRICTED))
 		init_backup_dir();
 #endif
 #ifdef ENABLE_OPERATINGDIR
 	/* Set up the operating directory.  This entails chdir()ing there,
 	 * so that file reads and writes will be based there. */
-	if (operating_dir != NULL)
+	if (operating_dir)
 		init_operating_dir();
 #endif
 
@@ -2375,7 +2375,7 @@ int main(int argc, char **argv)
 	if (alt_speller == NULL && !ISSET(RESTRICTED)) {
 		const char *spellenv = getenv("SPELL");
 
-		if (spellenv != NULL)
+		if (spellenv)
 			alt_speller = copy_of(spellenv);
 	}
 #endif
@@ -2605,7 +2605,7 @@ int main(int argc, char **argv)
 			goto_line_and_column(givenline, givencol, TRUE);
 		}
 #ifndef NANO_TINY
-		else if (searchstring != NULL) {
+		else if (searchstring) {
 			openfile->current = openfile->filetop;
 			openfile->current_x = 0;
 			if (ISSET(USE_REGEXP))
@@ -2656,7 +2656,7 @@ int main(int argc, char **argv)
 	prepare_for_display();
 
 #ifdef ENABLE_NANORC
-	if (startup_problem != NULL)
+	if (startup_problem)
 		statusline(ALERT, "%s", startup_problem);
 
 #define NOTREBOUND  first_sc_for(MMAIN, do_help) && \

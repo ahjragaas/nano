@@ -2042,7 +2042,7 @@ void titlebar(const char *path)
 	} else
 #endif
 #ifdef ENABLE_BROWSER
-	if (!inhelp && path != NULL)
+	if (!inhelp && path)
 		prefix = _("DIR:");
 	else
 #endif
@@ -2518,7 +2518,7 @@ void place_the_cursor(void)
 		row -= chunk_for(openfile->firstcolumn, openfile->edittop);
 
 		/* Calculate how many rows the lines from edittop to current use. */
-		while (line != NULL && line != openfile->current) {
+		while (line && line != openfile->current) {
 			row += 1 + extra_chunks_in(line);
 			line = line->next;
 		}
@@ -2904,7 +2904,7 @@ int update_softwrapped_line(linestruct *line)
 		row -= chunk_for(openfile->firstcolumn, openfile->edittop);
 
 	/* Find out on which screen row the target line should be shown. */
-	while (someline != line && someline != NULL) {
+	while (someline != line && someline) {
 		row += 1 + extra_chunks_in(someline);
 		someline = someline->next;
 	}
@@ -3133,7 +3133,7 @@ void edit_scroll(bool direction)
 
 	/* Draw new content on the blank row (and on the bordering row too
 	 * when it was deemed necessary). */
-	while (nrows > 0 && line != NULL) {
+	while (nrows > 0 && line) {
 		nrows -= update_line(line, (line == openfile->current) ?
 										openfile->current_x : 0);
 		line = line->next;
@@ -3194,7 +3194,7 @@ size_t get_softwrap_breakpoint(const char *linedata, size_t leftedge,
 
 	/* If we're softwrapping at blanks and we found at least one blank, break
 	 * after that blank -- if it doesn't overshoot the screen's edge. */
-	if (farthest_blank != NULL) {
+	if (farthest_blank) {
 		size_t aftertheblank = last_blank_col;
 		size_t onestep = advance_over(farthest_blank, &aftertheblank);
 
@@ -3229,7 +3229,7 @@ size_t get_chunk_and_edge(size_t column, linestruct *line, size_t *leftedge)
 
 		/* When the column is in range or we reached end-of-line, we're done. */
 		if (end_of_line || (start_col <= column && column < end_col)) {
-			if (leftedge != NULL)
+			if (leftedge)
 				*leftedge = start_col;
 			return current_chunk;
 		}
@@ -3437,7 +3437,7 @@ void edit_refresh(void)
 
 	line = openfile->edittop;
 
-	while (row < editwinrows && line != NULL) {
+	while (row < editwinrows && line) {
 		row += update_line(line, (line == openfile->current) ? openfile->current_x : 0);
 		line = line->next;
 	}

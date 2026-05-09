@@ -341,7 +341,7 @@ void research_filename(bool forwards)
 {
 #ifdef ENABLE_HISTORIES
 	/* If nothing was searched for yet, take the last item from history. */
-	if (*last_search == '\0' && searchbot->prev != NULL)
+	if (*last_search == '\0' && searchbot->prev)
 		last_search = mallocstrcpy(last_search, searchbot->prev->data);
 #endif
 
@@ -372,7 +372,7 @@ char *strip_last_component(const char *path)
 	char *copy = copy_of(path);
 	char *last_slash = strrchr(copy, '/');
 
-	if (last_slash != NULL)
+	if (last_slash)
 		*last_slash = '\0';
 
 	return copy;
@@ -397,7 +397,7 @@ char *browse(char *path)
 
 	path = free_and_assign(path, get_full_path(path));
 
-	if (path != NULL)
+	if (path)
 		dir = opendir(path);
 
 	if (path == NULL || dir == NULL) {
@@ -414,7 +414,7 @@ char *browse(char *path)
 		present_name = mallocstrcpy(present_name, filelist[selected]);
 	}
 
-	if (dir != NULL) {
+	if (dir) {
 		/* Get the file list, and set gauge and piles in the process. */
 		read_the_list(path, dir);
 		closedir(dir);
@@ -427,7 +427,7 @@ char *browse(char *path)
 
 	/* If something was selected before, reselect it;
 	 * otherwise, just select the first item (..). */
-	if (present_name != NULL) {
+	if (present_name) {
 		reselect(present_name);
 		free(present_name);
 		present_name = NULL;

@@ -44,7 +44,7 @@ void set_interface_colorpairs(void)
 	for (size_t index = 0; index < NUMBER_OF_ELEMENTS; index++) {
 		colortype *combo = color_combo[index];
 
-		if (combo != NULL) {
+		if (combo) {
 			if (!defaults_allowed) {
 				if (combo->fg == THE_DEFAULT)
 					combo->fg = COLOR_WHITE;
@@ -143,7 +143,7 @@ void find_and_prime_applicable_syntax(void)
 		return;
 
 	/* If we specified a syntax-override string, use it. */
-	if (syntaxstr != NULL) {
+	if (syntaxstr) {
 		/* An override of "none" is like having no syntax at all. */
 		if (strcmp(syntaxstr, "none") == 0)
 			return;
@@ -203,7 +203,7 @@ void find_and_prime_applicable_syntax(void)
 		}
 
 		/* Now try and find a syntax that matches the magic string. */
-		if (magicstring != NULL) {
+		if (magicstring) {
 			for (sntx = syntaxes; sntx != NULL; sntx = sntx->next)
 				if (found_in_list(sntx->magics, magicstring))
 					break;
@@ -222,7 +222,7 @@ void find_and_prime_applicable_syntax(void)
 	}
 
 	/* When the syntax isn't loaded yet, parse it and initialize its colors. */
-	if (sntx != NULL && sntx->filename != NULL) {
+	if (sntx && sntx->filename) {
 		parse_one_include(sntx->filename, sntx);
 		set_syntax_colorpairs(sntx);
 	}

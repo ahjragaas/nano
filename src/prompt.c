@@ -323,7 +323,7 @@ bool handle_editing(functionptrtype function)
 	else if (function == copy_text)
 		copy_the_answer();
 	else if (function == paste_text) {
-		if (cutbuffer != NULL)
+		if (cutbuffer)
 			paste_into_answer();
 	}
 #endif
@@ -489,7 +489,7 @@ functionptrtype acquire_an_answer(int *actual, bool *listed,
 #ifdef ENABLE_TABCOMP
 		if (function == do_tab) {
 #ifdef ENABLE_HISTORIES
-			if (history_list != NULL) {
+			if (history_list) {
 				if (!previous_was_tab)
 					fragment_length = strlen(answer);
 
@@ -506,7 +506,7 @@ functionptrtype acquire_an_answer(int *actual, bool *listed,
 		} else
 #endif
 #ifdef ENABLE_HISTORIES
-		if (function == get_older_item && history_list != NULL) {
+		if (function == get_older_item && history_list) {
 			/* If this is the first step into history, start at the bottom. */
 			if (stored_string == NULL)
 				reset_history_pointer_for(*history_list);
@@ -516,14 +516,14 @@ functionptrtype acquire_an_answer(int *actual, bool *listed,
 				stored_string = mallocstrcpy(stored_string, answer);
 
 			/* If there is an older item, move to it and copy its string. */
-			if ((*history_list)->prev != NULL) {
+			if ((*history_list)->prev) {
 				*history_list = (*history_list)->prev;
 				answer = mallocstrcpy(answer, (*history_list)->data);
 				typing_x = strlen(answer);
 			}
-		} else if (function == get_newer_item && history_list != NULL) {
+		} else if (function == get_newer_item && history_list) {
 			/* If there is a newer item, move to it and copy its string. */
-			if ((*history_list)->next != NULL) {
+			if ((*history_list)->next) {
 				*history_list = (*history_list)->next;
 				answer = mallocstrcpy(answer, (*history_list)->data);
 				typing_x = strlen(answer);
@@ -578,7 +578,7 @@ functionptrtype acquire_an_answer(int *actual, bool *listed,
 #endif
 #ifdef ENABLE_HISTORIES
 	/* If the history pointer was moved, point it at the bottom again. */
-	if (stored_string != NULL) {
+	if (stored_string) {
 		reset_history_pointer_for(*history_list);
 		free(stored_string);
 	}
@@ -750,19 +750,19 @@ int ask_user(bool withall, const char *question)
 		letter[index] = '\0';
 
 		/* See if the typed letter is in the Yes, No, or All strings. */
-		if (strstr(yesstr, letter) != NULL)
+		if (strstr(yesstr, letter))
 			choice = YES;
-		else if (strstr(nostr, letter) != NULL)
+		else if (strstr(nostr, letter))
 			choice = NO;
-		else if (withall && strstr(allstr, letter) != NULL)
+		else if (withall && strstr(allstr, letter))
 			choice = ALL;
 		else
 #endif /* ENABLE_NLS */
-		if (strchr("Yy", kbinput) != NULL)
+		if (strchr("Yy", kbinput))
 			choice = YES;
-		else if (strchr("Nn", kbinput) != NULL)
+		else if (strchr("Nn", kbinput))
 			choice = NO;
-		else if (withall && strchr("Aa", kbinput) != NULL)
+		else if (withall && strchr("Aa", kbinput))
 			choice = ALL;
 
 		if (choice != UNDECIDED)

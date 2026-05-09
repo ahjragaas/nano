@@ -188,7 +188,7 @@ void jot_error(const char *msg, ...)
 
 	if (startup_problem == NULL) {
 #ifdef ENABLE_NANORC
-		if (nanorc != NULL) {
+		if (nanorc) {
 			snprintf(textbuf, MAXSIZE, _("Mistakes in '%s'"), nanorc);
 			startup_problem = copy_of(textbuf);
 		} else
@@ -954,7 +954,7 @@ void parse_one_include(char *file, syntaxtype *syntax)
 	extra = syntax->augmentations;
 
 	/* Apply any stored extendsyntax commands. */
-	while (extra != NULL) {
+	while (extra) {
 		char *keyword = extra->data;
 		char *therest = parse_next_word(extra->data);
 
@@ -1281,7 +1281,7 @@ void grab_and_store(const char *kind, char *ptr, regexlisttype **storage)
 	lastthing = *storage;
 
 	/* If there was an earlier command, go to the last of those regexes. */
-	while (lastthing != NULL && lastthing->next != NULL)
+	while (lastthing && lastthing->next)
 		lastthing = lastthing->next;
 
 	/* Now gather any valid regexes and add them to the linked list. */
@@ -1468,9 +1468,9 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 				newitem->data = argument;
 				newitem->next = NULL;
 
-				if (sntx->augmentations != NULL) {
+				if (sntx->augmentations) {
 					extra = sntx->augmentations;
-					while (extra->next != NULL)
+					while (extra->next)
 						extra = extra->next;
 					extra->next = newitem;
 				} else
@@ -1711,7 +1711,7 @@ void parse_one_nanorc(void)
 
 	/* If opening the file succeeded, parse it.  Otherwise, only
 	 * complain if the file actually exists. */
-	if (rcstream != NULL)
+	if (rcstream)
 		parse_rcfile(rcstream, FALSE, TRUE);
 	else if (errno != ENOENT)
 		jot_error(N_("Error reading %s: %s"), nanorc, strerror(errno));
