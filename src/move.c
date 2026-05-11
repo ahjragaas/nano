@@ -476,7 +476,7 @@ void do_home(void)
 	if (ISSET(SMART_HOME)) {
 		size_t indent_x = indent_length(openfile->current->data);
 
-		if (openfile->current->data[indent_x] != '\0') {
+		if (openfile->current->data[indent_x]) {
 			/* If we're exactly on the indent, move fully home.  Otherwise,
 			 * when not softwrapping or not after the first nonblank chunk,
 			 * move to the first nonblank character. */
@@ -673,11 +673,11 @@ void do_right(void)
 {
 	linestruct *was_current = openfile->current;
 
-	if (openfile->current->data[openfile->current_x] != '\0') {
+	if (openfile->current->data[openfile->current_x]) {
 		openfile->current_x = step_right(openfile->current->data,
 												openfile->current_x);
 #ifdef ENABLE_UTF8
-		while (openfile->current->data[openfile->current_x] != '\0' &&
+		while (openfile->current->data[openfile->current_x] &&
 					is_zerowidth(openfile->current->data + openfile->current_x))
 			openfile->current_x = step_right(openfile->current->data,
 												openfile->current_x);

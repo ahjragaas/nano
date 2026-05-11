@@ -339,7 +339,7 @@ void wrap_help_text_into_buffer(void)
 	}
 
 	/* Copy the help text into the just-created new buffer. */
-	while (*ptr != '\0') {
+	while (*ptr) {
 		int length, shim;
 		char *oneline;
 

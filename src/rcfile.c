@@ -536,7 +536,7 @@ char *menu_to_name(int menu)
  * point to '\0' when end-of-line was reached. */
 char *parse_next_word(char *ptr)
 {
-	while (!isblank((unsigned char)*ptr) && *ptr != '\0')
+	while (*ptr && !isblank((unsigned char)*ptr))
 		ptr++;
 
 	if (*ptr == '\0')
@@ -562,7 +562,7 @@ char *parse_argument(char *ptr)
 	if (*ptr != '"')
 		return parse_next_word(ptr);
 
-	while (*ptr != '\0') {
+	while (*ptr) {
 		if (*++ptr == '"')
 			last_quote = ptr;
 	}
@@ -595,8 +595,7 @@ char *parse_next_regex(char *ptr)
 
 	/* Continue until the end of the line, or until a double quote followed
 	 * by end-of-line or a blank. */
-	while (*ptr != '\0' && (*ptr != '"' ||
-						(ptr[1] != '\0' && !isblank((unsigned char)ptr[1]))))
+	while (*ptr && (*ptr != '"' || (ptr[1] && !isblank((unsigned char)ptr[1]))))
 		ptr++;
 
 	if (*ptr == '\0') {
@@ -700,13 +699,13 @@ void begin_new_syntax(char *ptr)
 	seen_color_command = FALSE;
 
 	/* The default syntax should have no associated extensions. */
-	if (strcmp(live_syntax->name, "default") == 0 && *ptr != '\0') {
+	if (*ptr && strcmp(live_syntax->name, "default") == 0) {
 		jot_error(N_("The \"default\" syntax does not accept extensions"));
 		return;
 	}
 
 	/* If there seem to be extension regexes, pick them up. */
-	if (*ptr != '\0')
+	if (*ptr)
 		grab_and_store("extension", ptr, &live_syntax->extensions);
 }
 #endif /* ENABLE_COLOR */
@@ -1055,12 +1054,12 @@ short indices[COLORCOUNT] = { COLOR_RED, COLOR_GREEN, COLOR_BLUE,
  * vivid to TRUE for a lighter color, and thick for a heavier typeface. */
 short color_to_short(const char *colorname, bool *vivid, bool *thick)
 {
-	if (strncmp(colorname, "bright", 6) == 0 && colorname[6] != '\0') {
+	if (strncmp(colorname, "bright", 6) == 0 && colorname[6]) {
 		/* Prefix "bright" is deprecated; remove in 2027. */
 		*vivid = TRUE;
 		*thick = TRUE;
 		colorname += 6;
-	} else if (strncmp(colorname, "light", 5) == 0 && colorname[5] != '\0') {
+	} else if (strncmp(colorname, "light", 5) == 0 && colorname[5]) {
 		*vivid = TRUE;
 		*thick = FALSE;
 		colorname += 5;
@@ -1178,7 +1177,7 @@ void parse_rule(char *ptr, int rex_flags)
 		return;
 	}
 
-	while (*ptr != '\0') {
+	while (*ptr) {
 		regex_t *start_rgx = NULL, *end_rgx = NULL;
 			/* Intermediate storage for compiled regular expressions. */
 		colortype *newcolor = NULL;
@@ -1268,7 +1267,7 @@ void grab_and_store(const char *kind, char *ptr, regexlisttype **storage)
 	}
 
 	/* The default syntax doesn't take any file matching stuff. */
-	if (strcmp(live_syntax->name, "default") == 0 && *ptr != '\0') {
+	if (*ptr && strcmp(live_syntax->name, "default") == 0) {
 		jot_error(N_("The \"default\" syntax does not accept '%s' regexes"), kind);
 		return;
 	}
@@ -1285,7 +1284,7 @@ void grab_and_store(const char *kind, char *ptr, regexlisttype **storage)
 		lastthing = lastthing->next;
 
 	/* Now gather any valid regexes and add them to the linked list. */
-	while (*ptr != '\0') {
+	while (*ptr) {
 		regex_t *packed_rgx = NULL;
 
 		regexstring = ++ptr;

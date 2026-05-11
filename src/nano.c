@@ -271,7 +271,7 @@ void close_and_go(void)
 		delete_lockfile(openfile->lock_filename);
 #endif
 #ifdef ENABLE_HISTORIES
-	if (ISSET(POSITIONLOG) && openfile->filename[0] != '\0')
+	if (ISSET(POSITIONLOG) && openfile->filename[0])
 		update_positions_register();
 #endif
 #ifdef ENABLE_MULTIBUFFER
@@ -305,7 +305,7 @@ void do_exit(void)
 	 * and the file has a name, simply save.  Otherwise, ask the user. */
 	if (!openfile->modified || ISSET(VIEW_MODE))
 		choice = NO;
-	else if (ISSET(SAVE_ON_EXIT) && openfile->filename[0] != '\0')
+	else if (ISSET(SAVE_ON_EXIT) && openfile->filename[0])
 		choice = YES;
 	else {
 		if (ISSET(SAVE_ON_EXIT))
@@ -2594,7 +2594,7 @@ int main(int argc, char **argv)
 		}
 
 #ifdef ENABLE_HISTORIES
-		if (ISSET(POSITIONLOG) && openfile->filename[0] != '\0')
+		if (ISSET(POSITIONLOG) && openfile->filename[0])
 			restore_cursor_position_if_any();
 #endif
 
@@ -2666,7 +2666,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef ENABLE_HELP
-	if (*openfile->filename == '\0' && openfile->totsize == 0 &&
+	if (openfile->filename[0] == '\0' && openfile->totsize == 0 &&
 				openfile->next == openfile && !ISSET(NO_HELP) && NOTREBOUND)
 		statusbar(_("Welcome to nano.  For basic help, type Ctrl+G."));
 #endif

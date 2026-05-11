@@ -959,7 +959,7 @@ void send_data(const linestruct *line, int fd)
 		exit(4);
 
 	/* Send each line, except a final empty line. */
-	while (line && (line->next || line->data[0] != '\0')) {
+	while (line && (line->next || line->data[0])) {
 		size_t length = recode_LF_to_NUL(line->data);
 
 		if (fwrite(line->data, 1, length, tube) < length)
@@ -1279,7 +1279,7 @@ void insert_a_file_or(bool execute)
 #endif
 				/* If the command is not empty, execute it and read its output
 				 * into the buffer, and add the command to the history list. */
-				if (*answer != '\0') {
+				if (*answer) {
 					execute_command(answer);
 #ifdef ENABLE_HISTORIES
 					update_history(&execute_history, answer, PRUNE_DUPLICATE);
@@ -1873,7 +1873,7 @@ bool write_file(const char *name, FILE *thefile, bool normal,
 		 * character after it.  If this last line is empty, it means zero bytes
 		 * are written for it, and we don't count it in the number of lines. */
 		if (line->next == NULL) {
-			if (line->data[0] != '\0')
+			if (line->data[0])
 				lineswritten++;
 			break;
 		}
@@ -2121,7 +2121,7 @@ int write_it_out(bool exiting, bool withprompt)
 
 		/* When we shouldn't prompt and have a filename, use that name.
 		 * Otherwise, ask for the filename (or for confirmation of it). */
-		if ((!withprompt || (ISSET(SAVE_ON_EXIT) && exiting)) && *openfile->filename)
+		if ((!withprompt || (ISSET(SAVE_ON_EXIT) && exiting)) && openfile->filename[0])
 			answer = mallocstrcpy(answer, openfile->filename);
 		else
 			response = do_prompt(MWRITEFILE, given, NULL,
@@ -2335,7 +2335,7 @@ char *expand_leading_tilde(const char *path)
 		return copy_of(path);
 
 	/* Figure out how much of the string we need to compare. */
-	while (path[i] != '/' && path[i] != '\0')
+	while (path[i] && path[i] != '/')
 		i++;
 
 	if (i == 1) {
@@ -2531,7 +2531,7 @@ char *input_tab(char *morsel, size_t *place, void (*refresh_func)(void), bool *l
 	char **matches = NULL;
 
 	/* If the cursor is not at the end of the fragment, do nothing. */
-	if (morsel[*place] != '\0') {
+	if (morsel[*place]) {
 		beep();
 		return morsel;
 	}

@@ -31,7 +31,7 @@ void expunge(undo_type action)
 	openfile->placewewant = xplustabs();
 
 	/* When in the middle of a line, delete the current character. */
-	if (openfile->current->data[openfile->current_x] != '\0') {
+	if (openfile->current->data[openfile->current_x]) {
 		int charlen = char_length(openfile->current->data + openfile->current_x);
 		size_t line_len = strlen(openfile->current->data + openfile->current_x);
 #ifndef NANO_TINY
@@ -128,7 +128,7 @@ void do_delete(void)
 	{
 		expunge(DEL);
 #ifdef ENABLE_UTF8
-		while (openfile->current->data[openfile->current_x] != '\0' &&
+		while (openfile->current->data[openfile->current_x] &&
 				is_zerowidth(openfile->current->data + openfile->current_x))
 			expunge(DEL);
 #endif
@@ -208,8 +208,7 @@ void chop_word(bool forward)
 		}
 	} else {
 		do_next_word(ISSET(AFTER_ENDS));
-		if (openfile->current != is_current &&
-							is_current->data[is_current_x] != '\0') {
+		if (openfile->current != is_current && is_current->data[is_current_x]) {
 			openfile->current = is_current;
 			openfile->current_x = strlen(is_current->data);
 		}
@@ -366,7 +365,7 @@ void extract_segment(linestruct *top, size_t top_x, linestruct *bot, size_t bot_
 	}
 
 	/* If the text doesn't end with a newline, and it should, add one. */
-	if (!ISSET(NO_NEWLINES) && openfile->filebot->data[0] != '\0')
+	if (!ISSET(NO_NEWLINES) && openfile->filebot->data[0])
 		new_magicline();
 }
 
@@ -441,7 +440,7 @@ void ingraft_buffer(linestruct *topline)
 	renumber_from(line);
 
 	/* If the text doesn't end with a newline, and it should, add one. */
-	if (!ISSET(NO_NEWLINES) && openfile->filebot->data[0] != '\0')
+	if (!ISSET(NO_NEWLINES) && openfile->filebot->data[0])
 		new_magicline();
 }
 
@@ -508,7 +507,7 @@ void do_snip(bool marked, bool until_eof, bool append)
 		/* When not at the end of a line, move the rest of this line into
 		 * the cutbuffer.  Otherwise, when not at the end of the buffer,
 		 * move just the "line separator" into the cutbuffer. */
-		if (line->data[openfile->current_x] != '\0')
+		if (line->data[openfile->current_x])
 			extract_segment(line, openfile->current_x, line, strlen(line->data));
 		else if (openfile->current != openfile->filebot) {
 			extract_segment(line, openfile->current_x, line->next, 0);

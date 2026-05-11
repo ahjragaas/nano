@@ -79,7 +79,7 @@ void search_init(bool replacing, bool retain_answer)
 		/* What will be searched for when the user types just <Enter>. */
 
 	/* If something was searched for earlier, include it in the prompt. */
-	if (*last_search != '\0') {
+	if (*last_search) {
 		char *disp = display_string(last_search, 0, COLS / 3, FALSE, FALSE);
 
 		thedefault = nmalloc(strlen(disp) + 7);
@@ -118,7 +118,7 @@ void search_init(bool replacing, bool retain_answer)
 		/* If Enter was pressed, prepare to do a replace or a search. */
 		if (response == 0 || response == -2) {
 			/* If an actual answer was typed, remember it. */
-			if (*answer != '\0') {
+			if (*answer) {
 				last_search = mallocstrcpy(last_search, answer);
 #ifdef ENABLE_HISTORIES
 				update_history(&search_history, answer, PRUNE_DUPLICATE);
@@ -203,7 +203,7 @@ int findnextstr(const char *needle, bool whole_word_only, int modus,
 			if (ISSET(BACKWARDS_SEARCH) && from != line->data) {
 				from = line->data + step_left(line->data, from - line->data);
 				found = strstrwrapper(line->data, needle, from);
-			} else if (!ISSET(BACKWARDS_SEARCH) && *from != '\0') {
+			} else if (!ISSET(BACKWARDS_SEARCH) && *from) {
 				from += char_length(from);
 				found = strstrwrapper(line->data, needle, from);
 			}
@@ -459,7 +459,7 @@ int replace_regexp(char *string, bool create)
 
 	/* Iterate through the replacement text to handle subexpression
 	 * replacement using \1, \2, \3, etc. */
-	while (*c != '\0') {
+	while (*c) {
 		int num = (*(c + 1) - '0');
 
 		if (*c != '\\' || num < 1 || num > 9 || num > search_regexp.re_nsub) {

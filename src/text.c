@@ -1008,13 +1008,13 @@ void add_undo(undo_type action, const char *message)
 	case BACK:
 		/* If the next line is the magic line, don't ever undo this
 		 * backspace, as it won't actually have deleted anything. */
-		if (thisline->next == openfile->filebot && thisline->data[0] != '\0')
+		if (thisline->next == openfile->filebot && thisline->data[0])
 			u->xflags |= WAS_BACKSPACE_AT_EOF;
 		/* Fall-through. */
 	case DEL:
 		/* When not at the end of a line, store the deleted character;
 		 * otherwise, morph the undo item into a line join. */
-		if (thisline->data[openfile->current_x] != '\0') {
+		if (thisline->data[openfile->current_x]) {
 			int charlen = char_length(thisline->data + u->head_x);
 
 			u->strdata = measured_copy(thisline->data + u->head_x, charlen);
@@ -1401,12 +1401,12 @@ ssize_t break_line(const char *textstart, ssize_t goal, bool snap_at_nl)
 		/* The column number that corresponds to the position of the pointer. */
 
 	/* Skip over leading whitespace, where a line should never be broken. */
-	while (*pointer != '\0' && is_blank_char(pointer))
+	while (*pointer && is_blank_char(pointer))
 		pointer += advance_over(pointer, &column);
 
 	/* Find the last blank that does not overshoot the target column.
 	 * When treating a help text, do not break in the keystrokes area. */
-	while (*pointer != '\0' && ((ssize_t)column <= goal)) {
+	while (*pointer && ((ssize_t)column <= goal)) {
 		if (is_blank_char(pointer) && (!inhelp || column > 17 || goal < 40))
 			lastblank = pointer;
 #ifdef ENABLE_HELP
@@ -1442,7 +1442,7 @@ ssize_t break_line(const char *textstart, ssize_t goal, bool snap_at_nl)
 	pointer = lastblank + char_length(lastblank);
 
 	/* Skip any consecutive blanks after the last blank. */
-	while (*pointer != '\0' && is_blank_char(pointer)) {
+	while (*pointer && is_blank_char(pointer)) {
 		lastblank = pointer;
 		pointer += char_length(pointer);
 	}
@@ -1458,7 +1458,7 @@ size_t indent_length(const char *line)
 {
 	const char *start = line;
 
-	while (*line != '\0' && is_blank_char(line))
+	while (*line && is_blank_char(line))
 		line += char_length(line);
 
 	return (line - start);
@@ -1619,29 +1619,29 @@ void squeeze(linestruct *line, size_t skip)
 	 * all blanks after it; 2) if it is punctuation, copy it plus a possible
 	 * tailing bracket, and change at most two subsequent blanks to spaces, and
 	 * pass over all blanks after these; 3) leave anything else unchanged. */
-	while (*from != '\0') {
+	while (*from) {
 		if (is_blank_char(from)) {
 			from += char_length(from);
 			*(to++) = ' ';
 
-			while (*from != '\0' && is_blank_char(from))
+			while (*from && is_blank_char(from))
 				from += char_length(from);
 		} else if (mbstrchr(punct, from)) {
 			copy_character(&from, &to);
 
-			if (*from != '\0' && mbstrchr(brackets, from))
+			if (*from && mbstrchr(brackets, from))
 				copy_character(&from, &to);
 
-			if (*from != '\0' && is_blank_char(from)) {
+			if (*from && is_blank_char(from)) {
 				from += char_length(from);
 				*(to++) = ' ';
 			}
-			if (*from != '\0' && is_blank_char(from)) {
+			if (*from && is_blank_char(from)) {
 				from += char_length(from);
 				*(to++) = ' ';
 			}
 
-			while (*from != '\0' && is_blank_char(from))
+			while (*from && is_blank_char(from))
 				from += char_length(from);
 		} else
 			copy_character(&from, &to);
@@ -1857,7 +1857,7 @@ void justify_text(bool whole_buffer)
 		linecount = endline->lineno - startline->lineno + (end_x > 0 ? 1 : 0);
 
 		/* Remember whether the end of the region was before the end-of-line. */
-		before_eol = endline->data[end_x] != '\0';
+		before_eol = (endline->data[end_x] != '\0');
 	} else
 #endif /* NANO_TINY */
 	{
@@ -2494,7 +2494,7 @@ void do_int_speller(const char *tempfile_name)
 	oneword = misspellings;
 
 	/* Process each of the misspelled words. */
-	while (*pointer != '\0') {
+	while (*pointer) {
 		if ((*pointer == '\r') || (*pointer == '\n')) {
 			*pointer = '\0';
 			if (oneword != pointer) {
@@ -2700,7 +2700,7 @@ void do_linter(void)
 	onelint = lintings;
 
 	/* Now parse the output of the linter. */
-	while (*pointer != '\0') {
+	while (*pointer) {
 		if ((*pointer == '\r') || (*pointer == '\n')) {
 			*pointer = '\0';
 			if (onelint != pointer) {

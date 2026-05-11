@@ -116,7 +116,7 @@ bool parse_num(const char *string, ssize_t *result)
 
 	value = (ssize_t)strtol(string, &excess, 10);
 
-	if (errno == ERANGE || *string == '\0' || *excess != '\0')
+	if (errno == ERANGE || *string == '\0' || *excess)
 		return FALSE;
 
 	*result = value;
@@ -173,7 +173,7 @@ size_t recode_LF_to_NUL(char *string)
 {
 	char *beginning = string;
 
-	while (*string != '\0') {
+	while (*string) {
 		if (*string == '\n')
 			*string = '\0';
 		string++;
@@ -383,7 +383,7 @@ size_t actual_x(const char *text, size_t column)
 	size_t width = 0;
 		/* The current accumulated span, in columns. */
 
-	while (*text != '\0') {
+	while (*text) {
 		int charlen = advance_over(text, &width);
 
 		if (width > column)
@@ -404,7 +404,7 @@ size_t wideness(const char *text, size_t maxlen)
 	if (maxlen == 0)
 		return 0;
 
-	while (*text != '\0') {
+	while (*text) {
 		size_t charlen = advance_over(text, &width);
 
 		if (maxlen <= charlen)
@@ -422,7 +422,7 @@ size_t breadth(const char *text)
 {
 	size_t span = 0;
 
-	while (*text != '\0')
+	while (*text)
 		text += advance_over(text, &span);
 
 	return span;

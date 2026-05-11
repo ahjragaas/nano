@@ -286,7 +286,7 @@ size_t mbstrlen(const char *pointer)
 {
 	size_t count = 0;
 
-	while (*pointer != '\0') {
+	while (*pointer) {
 		pointer += char_length(pointer);
 		count++;
 	}
@@ -409,7 +409,7 @@ int mbstrncasecmp(const char *s1, const char *s2, size_t n)
 	if (using_utf8) {
 		wchar_t wc1, wc2;
 
-		while (*s1 != '\0' && *s2 != '\0' && n > 0) {
+		while (*s1 && *s2 && n > 0) {
 			if ((signed char)*s1 >= 0 && (signed char)*s2 >= 0) {
 				if ('A' <= (*s1 & 0x5F) && (*s1 & 0x5F) <= 'Z') {
 					if ('A' <= (*s2 & 0x5F) && (*s2 & 0x5F) <= 'Z') {
@@ -460,7 +460,7 @@ char *mbstrcasestr(const char *haystack, const char *needle)
 	if (using_utf8) {
 		size_t needle_len = mbstrlen(needle);
 
-		while (*haystack != '\0') {
+		while (*haystack) {
 			if (mbstrncasecmp(haystack, needle, needle_len) == 0)
 				return (char *)haystack;
 
@@ -557,7 +557,7 @@ const char *mbstrchr(const char *string, const char *chr)
 			bad_c = TRUE;
 		}
 
-		while (*string != '\0') {
+		while (*string) {
 			int symlen = mbtowide(&ws, string);
 
 			if (symlen < 0) {
@@ -586,7 +586,7 @@ const char *mbstrchr(const char *string, const char *chr)
  * the characters in accept, searching forward. */
 char *mbstrpbrk(const char *string, const char *accept)
 {
-	while (*string != '\0') {
+	while (*string) {
 		if (mbstrchr(accept, string))
 			return (char *)string;
 
@@ -623,7 +623,7 @@ char *mbrevstrpbrk(const char *head, const char *accept, const char *pointer)
 /* Return TRUE if the given string contains at least one blank character. */
 bool has_blank_char(const char *string)
 {
-	while (*string != '\0' && !is_blank_char(string))
+	while (*string && !is_blank_char(string))
 		string += char_length(string);
 
 	return *string;
@@ -633,7 +633,7 @@ bool has_blank_char(const char *string)
 /* Return TRUE when the given string is empty or consists of only blanks. */
 bool white_string(const char *string)
 {
-	while (*string != '\0' && (is_blank_char(string) || *string == '\r'))
+	while (*string && (is_blank_char(string) || *string == '\r'))
 		string += char_length(string);
 
 	return !*string;

@@ -298,7 +298,7 @@ void search_filename(bool forwards)
 	int response;
 
 	/* If something was searched for before, show it between square brackets. */
-	if (*last_search != '\0') {
+	if (*last_search) {
 		char *disp = display_string(last_search, 0, COLS / 3, FALSE, FALSE);
 
 		thedefault = nmalloc(strlen(disp) + 7);
@@ -324,7 +324,7 @@ void search_filename(bool forwards)
 	}
 
 	/* If the user typed an answer, remember it. */
-	if (*answer != '\0') {
+	if (*answer) {
 		last_search = mallocstrcpy(last_search, answer);
 #ifdef ENABLE_HISTORIES
 		update_history(&search_history, answer, PRUNE_DUPLICATE);

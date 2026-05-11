@@ -371,7 +371,7 @@ int get_code_from_plantation(void)
 			if (plants_pointer[2] != '}')
 				return MISSING_BRACE;
 			plants_pointer += 3;
-			if (*plants_pointer != '\0')
+			if (*plants_pointer)
 				put_back(MORE_PLANTS);
 			return *(plants_pointer - 2);
 		}
@@ -387,7 +387,7 @@ int get_code_from_plantation(void)
 
 		plants_pointer = closing + 1;
 
-		if (*plants_pointer != '\0')
+		if (*plants_pointer)
 			put_back(MORE_PLANTS);
 
 		return PLANTED_A_COMMAND;
@@ -1811,7 +1811,7 @@ char *display_string(const char *text, size_t column, size_t span,
 	/* If the first character starts before the left edge, or would be
 	 * overwritten by a "<" token, then show placeholders instead. */
 	if ((start_col < column || (start_col > 0 && isdata && !ISSET(SOFTWRAP))) &&
-											*text != '\0' && *text != '\t') {
+											*text && *text != '\t') {
 		if (is_cntrl_char(text)) {
 			if (start_col < column) {
 				converted[index++] = control_mbrep(text, isdata);
@@ -1842,7 +1842,7 @@ char *display_string(const char *text, size_t column, size_t span,
 #define ZEROWIDTH_CHAR  FALSE
 #endif
 
-	while (*text != '\0' && (column < beyond || ZEROWIDTH_CHAR)) {
+	while (*text && (column < beyond || ZEROWIDTH_CHAR)) {
 		/* A plain printable ASCII character is one byte, one column. */
 		if (((signed char)*text > 0x20 && *text != DEL_CODE) || ISO8859_CHAR) {
 			converted[index++] = *(text++);
@@ -1939,8 +1939,7 @@ char *display_string(const char *text, size_t column, size_t span,
 	}
 
 	/* If there is more text than can be shown, make room for the ">". */
-	if (column > beyond || (*text != '\0' && (isprompt ||
-							(isdata && !ISSET(SOFTWRAP))))) {
+	if (column > beyond || (*text && (isprompt || (isdata && !ISSET(SOFTWRAP))))) {
 #ifdef ENABLE_UTF8
 		do {
 			index = step_left(converted, index);
@@ -2174,7 +2173,7 @@ void minibar(void)
 	wattron(footwin, interface_color_pair[MINI_INFOBAR]);
 	mvwprintw(footwin, 0, 0, "%*s", COLS, " ");
 
-	if (openfile->filename[0] != '\0') {
+	if (openfile->filename[0]) {
 		as_an_at = FALSE;
 		thename = display_string(openfile->filename, 0, COLS, FALSE, FALSE);
 	} else
@@ -2757,7 +2756,7 @@ void draw_row(int row, const char *converted, linestruct *line, size_t from_col)
 		char striped_char[MAXCHARLEN];
 		size_t charlen = 1;
 
-		if (*(converted + target_x) != '\0') {
+		if (*(converted + target_x)) {
 			charlen = collect_char(converted + target_x, striped_char);
 			target_column = wideness(converted, target_x);
 #ifdef USING_OLDER_LIBVTE
@@ -2857,7 +2856,7 @@ int update_line(linestruct *line, size_t index)
 	converted = display_string(line->data, from_col, editwincols, TRUE, FALSE);
 	draw_row(row, converted, line, from_col);
 
-	if (from_col > 0 && *converted != '\0') {
+	if (from_col > 0 && *converted) {
 		wattron(midwin, hilite_attribute);
 		mvwaddch(midwin, row, margin, '<');
 		wattroff(midwin, hilite_attribute);
@@ -3170,11 +3169,11 @@ size_t get_softwrap_breakpoint(const char *linedata, size_t leftedge,
 	}
 
 	/* First find the place in text where the current chunk starts. */
-	while (*text != '\0' && column < leftedge)
+	while (*text && column < leftedge)
 		text += advance_over(text, &column);
 
 	/* Now find the place in text where this chunk should end. */
-	while (*text != '\0' && column <= rightside) {
+	while (*text && column <= rightside) {
 		/* When breaking at blanks, do it *before* the target column. */
 		if (ISSET(AT_BLANKS) && is_blank_char(text) && column < rightside) {
 			farthest_blank = text;
