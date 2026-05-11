@@ -421,7 +421,7 @@ void not_found_msg(const char *str)
 void go_looking(void)
 {
 	linestruct *was_current = openfile->current;
-	size_t was_current_x = openfile->current_x;
+	size_t was_x = openfile->current_x;
 
 //#define TIMEIT  12
 #ifdef TIMEIT
@@ -436,8 +436,7 @@ void go_looking(void)
 
 	/* If we found something, and we're back at the exact same spot
 	 * where we started searching, then this is the only occurrence. */
-	if (didfind == 1 && openfile->current == was_current &&
-						openfile->current_x == was_current_x)
+	if (didfind == 1 && openfile->current == was_current && openfile->current_x == was_x)
 		statusline(REMARK, _("This is the only occurrence"));
 	else if (didfind == 0)
 		not_found_msg(last_search);
@@ -937,7 +936,7 @@ bool find_a_bracket(bool reverse, const char *bracket_pair)
 void do_find_bracket(void)
 {
 	linestruct *was_current = openfile->current;
-	size_t was_current_x = openfile->current_x;
+	size_t was_x = openfile->current_x;
 		/* The current cursor position, in case we don't find a complement. */
 	const char *ch;
 		/* The location in matchbrackets of the bracket under the cursor. */
@@ -1008,7 +1007,7 @@ void do_find_bracket(void)
 
 	/* Restore the cursor position. */
 	openfile->current = was_current;
-	openfile->current_x = was_current_x;
+	openfile->current_x = was_x;
 }
 
 /* Place an anchor at the current line when none exists, otherwise remove it. */

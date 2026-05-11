@@ -186,8 +186,8 @@ bool is_cuttable(bool test_cliff)
 void chop_word(bool forward)
 {
 	/* Remember the current cursor position. */
-	linestruct *is_current = openfile->current;
-	size_t is_current_x = openfile->current_x;
+	linestruct *was_current = openfile->current;
+	size_t was_x = openfile->current_x;
 	/* Remember where the cutbuffer is, then make it seem blank. */
 	linestruct *is_cutbuffer = cutbuffer;
 
@@ -199,18 +199,18 @@ void chop_word(bool forward)
 	 * edge instead, so that lines will not be joined unexpectedly. */
 	if (!forward) {
 		do_prev_word();
-		if (openfile->current != is_current) {
-			if (is_current_x > 0) {
-				openfile->current = is_current;
+		if (openfile->current != was_current) {
+			if (was_x > 0) {
+				openfile->current = was_current;
 				openfile->current_x = 0;
 			} else
 				openfile->current_x = strlen(openfile->current->data);
 		}
 	} else {
 		do_next_word(ISSET(AFTER_ENDS));
-		if (openfile->current != is_current && is_current->data[is_current_x]) {
-			openfile->current = is_current;
-			openfile->current_x = strlen(is_current->data);
+		if (openfile->current != was_current && was_current->data[was_x]) {
+			openfile->current = was_current;
+			openfile->current_x = strlen(was_current->data);
 		}
 	}
 
@@ -219,8 +219,8 @@ void chop_word(bool forward)
 	openfile->mark_x = openfile->current_x;
 
 	/* Put the cursor back where it was, so an undo will put it there too. */
-	openfile->current = is_current;
-	openfile->current_x = is_current_x;
+	openfile->current = was_current;
+	openfile->current_x = was_x;
 
 	/* Now kill the marked region and a word is gone. */
 	add_undo(CUT, NULL);

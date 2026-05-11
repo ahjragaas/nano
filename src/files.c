@@ -1218,8 +1218,8 @@ void insert_a_file_or(bool execute)
 			statusbar(_("Cancelled"));
 			break;
 		} else {
-			ssize_t was_current_lineno = openfile->current->lineno;
-			size_t was_current_x = openfile->current_x;
+			ssize_t was_lineno = openfile->current->lineno;
+			size_t was_x = openfile->current_x;
 #if !defined(NANO_TINY) || defined(ENABLE_BROWSER) || defined(ENABLE_MULTIBUFFER)
 			functionptrtype function = func_from_key(response);
 #endif
@@ -1317,8 +1317,7 @@ void insert_a_file_or(bool execute)
 #endif /* ENABLE_MULTIBUFFER */
 			{
 				/* If the buffer actually changed, mark it as modified. */
-				if (openfile->current->lineno != was_current_lineno ||
-									openfile->current_x != was_current_x)
+				if (openfile->current->lineno != was_lineno || openfile->current_x != was_x)
 					set_modified();
 
 				refresh_needed = TRUE;
