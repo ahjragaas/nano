@@ -91,8 +91,8 @@ void splice_node(linestruct *afterthis, linestruct *newnode)
 		afterthis->next->prev = newnode;
 	afterthis->next = newnode;
 
-	/* Update filebot when inserting a node at the end of file. */
-	if (openfile && openfile->filebot == afterthis)
+	/* When the node was inserted after end-of-buffer... */
+	if (openfile && afterthis == openfile->filebot)
 		openfile->filebot = newnode;
 }
 
