@@ -114,11 +114,9 @@ void update_history(linestruct **item, const char *text, bool avoid_duplicates)
 
 	/* If an identical string was found, delete that item. */
 	if (thesame) {
-		linestruct *after = thesame->next;
-
 		if (thesame == *htop)
-			*htop = after;
-		after->prev = thesame->prev;
+			*htop = thesame->next;
+		thesame->next->prev = thesame->prev;
 		if (thesame->prev)
 			thesame->prev->next = thesame->next;
 
