@@ -116,11 +116,14 @@ void update_history(linestruct **item, const char *text, bool avoid_duplicates)
 	if (thesame) {
 		linestruct *after = thesame->next;
 
-		/* If the string is at the head of the list, move the head. */
 		if (thesame == *htop)
 			*htop = after;
+		after->prev = thesame->prev;
+		if (thesame->prev)
+			thesame->prev->next = thesame->next;
 
-		unlink_node(thesame);
+		free(thesame->data);
+		free(thesame);
 		renumber_from(after);
 	}
 
@@ -130,13 +133,15 @@ void update_history(linestruct **item, const char *text, bool avoid_duplicates)
 		linestruct *oldest = *htop;
 
 		*htop = (*htop)->next;
-		unlink_node(oldest);
+		(*htop)->prev = NULL;
+		free(oldest->data);
+		free(oldest);
 		renumber_from(*htop);
 	}
 
 	/* Store the fresh string in the last item, then create a new item. */
 	(*hbot)->data = mallocstrcpy((*hbot)->data, text);
-	splice_node(*hbot, make_new_node(*hbot));
+	(*hbot)->next = make_new_node(*hbot);
 	*hbot = (*hbot)->next;
 	(*hbot)->data = copy_of("");
 
