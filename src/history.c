@@ -124,17 +124,17 @@ void update_history(linestruct **item, const char *text, bool avoid_duplicates)
 
 		free(thesame->data);
 		free(thesame);
-		renumber_from(after);
+		(*hbot)->lineno--;
 	}
 
 	/* If the history is full, delete the oldest item (the one at the
 	 * head of the list), to make room for a new item at the end. */
-	if ((*hbot)->lineno == MAX_SEARCH_HISTORY + 1) {
+	if ((*hbot)->lineno > MAX_SEARCH_HISTORY) {
 		*htop = (*htop)->next;
 		free((*htop)->prev->data);
 		free((*htop)->prev);
 		(*htop)->prev = NULL;
-		renumber_from(*htop);
+		(*hbot)->lineno--;
 	}
 
 	/* Store the fresh string in the last item, then create a new item. */
