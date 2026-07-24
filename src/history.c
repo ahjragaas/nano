@@ -116,9 +116,9 @@ void update_history(linestruct **item, const char *text, bool avoid_duplicates)
 	if (thesame) {
 		if (thesame == *htop)
 			*htop = thesame->next;
-		thesame->next->prev = thesame->prev;
-		if (thesame->prev)
+		else
 			thesame->prev->next = thesame->next;
+		thesame->next->prev = thesame->prev;
 
 		free(thesame->data);
 		free(thesame);
