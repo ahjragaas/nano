@@ -830,7 +830,7 @@ int open_file(const char *filename, bool new_one, FILE **stream)
 			statusline(REMARK, _("New File"));
 			return 0;
 		} else {
-			statusline(ALERT, _("File \"%s\" not found"), filename);
+			statusline(ALERT, _("File '%s' not found"), filename);
 			return -1;
 		}
 	}
