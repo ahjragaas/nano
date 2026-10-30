@@ -548,6 +548,8 @@ typedef struct openfilestruct {
 		/* The file's name as given by the user (but with tilde expanded). */
 	char *fullname;
 		/* The canonical absolute path of the file, when determinable. */
+	struct stat *statinfo;
+		/* The file's stat information from when it was opened or last saved. */
 	linestruct *filetop;
 		/* The file's first line. */
 	linestruct *filebot;
@@ -582,8 +584,6 @@ typedef struct openfilestruct {
 		/* Whether a marked region was made by holding Shift. */
 	format_type fmt;
 		/* The file's format -- Unix or DOS. */
-	struct stat *statinfo;
-		/* The file's stat information from when it was opened or last saved. */
 	char *lockfilename;
 		/* The path of the lockfile, if we created one. */
 	undostruct *undotop;

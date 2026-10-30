@@ -66,6 +66,7 @@ void make_new_buffer(void)
 
 	openfile->filename = copy_of("");
 	openfile->fullname = NULL;
+	openfile->statinfo = NULL;
 
 	openfile->filetop = make_new_node(NULL);
 	openfile->filetop->data = copy_of("");
@@ -96,7 +97,6 @@ void make_new_buffer(void)
 	openfile->last_saved = NULL;
 	openfile->last_action = OTHER;
 
-	openfile->statinfo = NULL;
 	openfile->lockfilename = NULL;
 #endif
 #ifdef ENABLE_MULTIBUFFER
@@ -324,6 +324,7 @@ char *do_lockfile(const char *filename, bool ask_the_user)
 	free(lockfilename);
 	return NULL;
 }
+#endif /* !NANO_TINY */
 
 /* Perform a stat call on the given filename, allocating a stat struct
  * if necessary.  On success, *pstat points to the stat's result.  On
@@ -338,7 +339,6 @@ void stat_with_alloc(const char *filename, struct stat **pstat)
 		*pstat = NULL;
 	}
 }
-#endif /* !NANO_TINY */
 
 /* Verify that the containing directory of the given filename exists. */
 bool has_valid_path(const char *filename)
@@ -462,10 +462,8 @@ bool open_buffer(const char *filename, bool new_one)
 
 		restore_handler_for_Ctrl_C();
 
-#ifndef NANO_TINY
 		if (openfile->statinfo == NULL)
 			stat_with_alloc(filename, &openfile->statinfo);
-#endif
 	}
 
 	/* For a new buffer, store filename and put cursor at start of buffer. */
@@ -602,9 +600,9 @@ void close_buffer(void)
 	orphan->next->prev = orphan->prev;
 
 	free(orphan->filename);
+	free(orphan->statinfo);
 	free_lines(orphan->filetop);
 #ifndef NANO_TINY
-	free(orphan->statinfo);
 	free(orphan->lockfilename);
 	/* Free the undo stack. */
 	discard_until(NULL);
@@ -1949,10 +1947,11 @@ bool write_file(const char *filename, FILE *thefile, writing_type method, bool a
 			}
 #endif
 		}
-#ifndef NANO_TINY
+
 		/* Get or update the stat info to reflect the current state. */
 		stat_with_alloc(filename, &openfile->statinfo);
 
+#ifndef NANO_TINY
 		/* Record at which point in the undo stack the buffer was saved. */
 		openfile->last_saved = openfile->current_undo;
 		openfile->last_action = OTHER;
@@ -2201,7 +2200,6 @@ int write_it_out(bool exiting, bool withprompt)
 						continue;
 				}
 			}
-#ifndef NANO_TINY
 			/* Complain if the file exists, the name hasn't changed,
 			 * and the old stat info doesn't match the current info. */
 			else if (name_exists && openfile->statinfo &&
@@ -2233,7 +2231,6 @@ int write_it_out(bool exiting, bool withprompt)
 					return 1;
 				}
 			}
-#endif
 		}
 
 		free(given);
