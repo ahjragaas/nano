@@ -2841,11 +2841,12 @@ void do_linter(void)
 					open_buffer(curlint->filename, TRUE);
 				} else {
 #endif
-					char *dontwantfile = copy_of(curlint->filename);
+					char *unwantedfile = copy_of(curlint->filename);
 					lintstruct *restlint = NULL;
 
+					/* Discard the messages for an unwanted file. */
 					while (curlint) {
-						if (strcmp(curlint->filename, dontwantfile) == 0) {
+						if (strcmp(curlint->filename, unwantedfile) == 0) {
 							if (curlint == lints)
 								lints = curlint->next;
 							else
@@ -2860,7 +2861,7 @@ void do_linter(void)
 						}
 					}
 
-					free(dontwantfile);
+					free(unwantedfile);
 
 					if (restlint == NULL) {
 						statusline(REMARK, _("No messages for this file"));
