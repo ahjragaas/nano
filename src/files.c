@@ -600,6 +600,7 @@ void close_buffer(void)
 	orphan->next->prev = orphan->prev;
 
 	free(orphan->filename);
+	free(orphan->fullname);
 	free(orphan->statinfo);
 	free_lines(orphan->filetop);
 #ifndef NANO_TINY
