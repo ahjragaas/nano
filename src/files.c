@@ -445,9 +445,6 @@ bool open_buffer(const char *filename, bool new_one)
 			}
 #endif /* NANO_TINY */
 		}
-
-		if (*filename)
-			openfile->fullname = get_full_path(filename);
 	}
 
 	/* If we have a filename and are not in NOREAD mode, open the file. */
@@ -461,14 +458,13 @@ bool open_buffer(const char *filename, bool new_one)
 		read_file(stream, descriptor, filename, !new_one);
 
 		restore_handler_for_Ctrl_C();
-
-		if (openfile->statinfo == NULL)
-			stat_with_alloc(filename, &openfile->statinfo);
 	}
 
 	/* For a new buffer, store filename and put cursor at start of buffer. */
 	if (descriptor >= 0 && new_one) {
 		openfile->filename = mallocstrcpy(openfile->filename, filename);
+		openfile->fullname = get_full_path(filename);
+		stat_with_alloc(filename, &openfile->statinfo);
 		openfile->current = openfile->filetop;
 		openfile->current_x = 0;
 		openfile->placewewant = 0;
