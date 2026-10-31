@@ -5,6 +5,8 @@ header "-\*-.*\<C(\+\+)?((;|[[:blank:]]).*)?-\*-"
 magic "^(C|C\+\+) (source|program)"
 comment "//"
 
+linter cc -fsyntax-only
+
 # Constants.
 color brightred "\<[[:upper:]_][[:upper:][:digit:]_]*\>"
 # Labels.
