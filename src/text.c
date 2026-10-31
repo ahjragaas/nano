@@ -2942,10 +2942,10 @@ void do_linter(void)
 	if (helpless) {
 		SET(NO_HELP);
 		window_init();
+		lastmessage = VACUUM;
 		refresh_needed = TRUE;
 	}
 
-	lastmessage = VACUUM;
 	currmenu = MMOST;
 	titlebar(NULL);
 #endif
