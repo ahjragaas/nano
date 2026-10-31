@@ -2826,13 +2826,13 @@ void do_linter(void)
 								strcmp(openfile->fullname, fullname) != 0));
 
 			if (openfile == started_at) {
-				char *msg = nmalloc(1024 + strlen(curlint->filename));
+				char *question = nmalloc(1024 + strlen(curlint->filename));
 				int choice;
 
-				sprintf(msg, _("Message for '%s'. Open this file? "), curlint->filename);
-				choice = ask_user(YESORNO, msg);
+				sprintf(question, _("Message for '%s'. Open this file? "), curlint->filename);
+				choice = ask_user(YESORNO, question);
 				currmenu = MLINTER;
-				free(msg);
+				free(question);
 
 				if (choice == CANCEL) {
 					statusbar(_("Cancelled"));
