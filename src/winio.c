@@ -1198,11 +1198,10 @@ int parse_kbinput(WINDOW *frame)
 #endif
 
 #ifdef __linux__
-	/* When not running under X, check for the bare arrow keys whether
-	 * Shift/Ctrl/Alt are being held together with them. */
-	unsigned char modifiers = 6;
+	unsigned char modifiers = 6;  /* Subcode for getting kernel's `shift_state`. */
 
-	/* Modifiers are: Alt (8), Ctrl (4), Shift (1). */
+	/* When running on a VT, check whether Shift/Ctrl/Alt are being held.
+	 * Modifiers are: Shift (1), Ctrl (4), and Alt (8). */
 	if (on_a_vt && !mute_modifiers && ioctl(0, TIOCLINUX, &modifiers) >= 0) {
 #ifndef NANO_TINY
 		/* Is Shift being held? */
