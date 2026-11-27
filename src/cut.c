@@ -404,13 +404,13 @@ void ingraft_buffer(linestruct *topline)
 		line->data[xpos + extralen] = '\0';
 
 		/* Hook the rest of the grafted lines in after the current one. */
-		botline->next = openfile->current->next;
-		if (botline->next)
-			botline->next->prev = botline;
+		botline->next = line->next;
+		if (line->next)
+			line->next->prev = botline;
 		else
 			openfile->filebot = botline;
-		openfile->current->next = topline->next;
-		topline->next->prev = openfile->current;
+		line->next = topline->next;
+		line->next->prev = line;
 
 		/* Add the text after the cursor position at the end of botline. */
 		length = strlen(botline->data);
