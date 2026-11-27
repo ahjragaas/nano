@@ -401,16 +401,14 @@ void ingraft_buffer(linestruct *topline)
 	}
 
 	if (topline != botline) {
-		/* When inserting at end-of-buffer, update the relevant pointer. */
-		if (line->next == NULL)
-			openfile->filebot = botline;
-
 		line->data[xpos + extralen] = '\0';
 
-		/* Hook the grafted lines in after the current one. */
+		/* Hook the rest of the grafted lines in after the current one. */
 		botline->next = openfile->current->next;
 		if (botline->next)
 			botline->next->prev = botline;
+		else
+			openfile->filebot = botline;
 		openfile->current->next = topline->next;
 		topline->next->prev = openfile->current;
 
