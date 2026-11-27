@@ -362,10 +362,8 @@ void extract_segment(linestruct *top, size_t top_x, linestruct *bot, size_t bot_
 	renumber_from(openfile->current);
 
 	/* When the beginning of the viewport was inside the excision, adjust. */
-	if (edittop_inside) {
+	if (edittop_inside)
 		adjust_viewport(STATIONARY);
-		refresh_needed = TRUE;
-	}
 
 	/* If the text doesn't end with a newline, and it should, add one. */
 	if (!ISSET(NO_NEWLINES) && openfile->filebot->data[0])
